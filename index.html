@@ -3,20 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>冒险者成长系统 V10</title>
+<title>冒险者成长系统 V11</title>
 <style>
+html{scroll-behavior:smooth}
 :root{--bg:#0e0c18;--panel:#24203d;--card:#332d55;--card2:#3d3565;--purple:#8d6cff;--purple2:#b09cff;--gold:#ffd54a;--green:#77e59b;--red:#ff7f88;--orange:#ffb56b;--muted:#b8b3cc;--line:rgba(255,255,255,.08)}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#261c49 0,#120f22 42%,#0b0913 100%);color:#fff;font-family:"Microsoft YaHei",system-ui,-apple-system,sans-serif;min-height:100vh;padding:18px}.app{max-width:960px;margin:auto}.hero,.panel{background:rgba(36,32,61,.96);border:1px solid rgba(141,108,255,.45);border-radius:18px;box-shadow:0 12px 35px rgba(0,0,0,.28);padding:18px;margin-bottom:14px}.hero{border:2px solid var(--purple)}h1{margin:0 0 4px;font-size:26px}h2{font-size:19px;margin:3px 0 12px}.identity{color:var(--purple2);margin-bottom:14px}.topgrid,.stats,.overview,.formgrid,.shopgrid,.settinggrid,.profilegrid,.questgrid{display:grid;gap:10px}.topgrid{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:repeat(4,1fr)}.overview{grid-template-columns:repeat(4,1fr)}.mini,.stat,.overview-item{background:var(--card);border-radius:12px;padding:12px}.mini b,.stat b,.overview-item b{display:block;font-size:20px;margin-top:4px}.power{color:var(--gold)}.green{color:var(--green)}.warn{color:var(--red)}.orange{color:var(--orange)}.muted{color:var(--muted);font-size:13px}.statusline{margin-top:10px;color:var(--purple2);line-height:1.6}.focus{margin-top:11px;padding:10px 12px;border-radius:11px;background:rgba(141,108,255,.12);border:1px solid rgba(141,108,255,.25);color:#ddd8ef;font-size:13px}.progress{height:9px;background:#19162a;border-radius:999px;overflow:hidden;margin-top:10px}.progress>span{display:block;height:100%;background:linear-gradient(90deg,var(--purple),var(--green));width:0;transition:width .25s}.task,.quest{background:var(--card);padding:13px;border-radius:13px;margin:9px 0;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.task.done,.quest.claimed{opacity:.65}.task.overdue{border:1px solid rgba(255,127,136,.7)}.task.daily{box-shadow:inset 3px 0 0 rgba(119,229,155,.7)}.task.high{box-shadow:inset 3px 0 0 var(--red)}.quest.ready{border:1px solid rgba(255,213,74,.6);box-shadow:0 0 18px rgba(255,213,74,.08)}.task-title,.quest-title{font-weight:700}.task-meta,.quest-meta{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.65}.pill{display:inline-block;padding:3px 7px;border-radius:999px;background:#4b426f;margin-right:5px;margin-top:4px}.pill.high{background:rgba(255,127,136,.16);color:#ffb4ba}.pill.low{background:rgba(119,229,155,.12);color:#a4edbb}.actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}button{border:0;border-radius:9px;background:var(--purple);color:#fff;padding:9px 13px;cursor:pointer;font-weight:700}button.secondary{background:#51496f}button.danger{background:#7c3945}button.ghost{background:transparent;border:1px solid #665b89}button.active{outline:2px solid var(--purple2)}button:disabled{opacity:.45;cursor:not-allowed}input,select{width:100%;border:1px solid #5e557d;background:#1e1a34;color:#fff;border-radius:9px;padding:10px;outline:none}.formgrid{grid-template-columns:repeat(6,minmax(90px,1fr));align-items:end}.formgrid .wide{grid-column:span 2}.questgrid{grid-template-columns:2fr repeat(3,1fr) auto;align-items:end}.shopgrid{grid-template-columns:1fr auto auto;align-items:end}.settinggrid{grid-template-columns:1fr auto;align-items:end}.profilegrid{grid-template-columns:1fr 1fr auto;align-items:end}.reward{background:var(--card);padding:12px;border-radius:11px;margin:8px 0;display:flex;align-items:center;justify-content:space-between;gap:12px}.badge{display:inline-block;background:#4a416e;border:1px solid #7566ad;border-radius:999px;padding:6px 10px;margin:4px 4px 0 0;font-size:13px}.badge.locked{opacity:.3}.log{font-size:13px;color:var(--muted);padding:8px 0;border-bottom:1px solid var(--line);line-height:1.5}.notice{min-height:24px;margin-top:8px;font-size:13px;color:var(--green)}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.toolbar input{max-width:240px}.section-note{font-size:12px;color:var(--muted);margin:-4px 0 10px;line-height:1.55}.empty{color:var(--muted);padding:10px 0}.footer{color:#8f88a5;text-align:center;font-size:12px;padding:10px 0 24px}.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}.filebtn{display:inline-block;background:#51496f;padding:9px 13px;border-radius:9px;font-weight:700;cursor:pointer}.filebtn input{display:none}.dangerbox{border:1px solid rgba(255,127,136,.25);border-radius:12px;padding:12px;margin-top:12px}.smallnum{max-width:110px}.hidden{display:none!important}
 .reward.has-stock{box-shadow:inset 3px 0 0 var(--gold)}.stock{display:inline-block;margin-top:7px;padding:4px 8px;border-radius:999px;background:#201b38;color:var(--muted);font-size:12px}.stock.ready{background:rgba(255,213,74,.14);color:var(--gold);border:1px solid rgba(255,213,74,.35)}
-.earninggrid{display:grid;grid-template-columns:1fr 1.2fr 2fr auto;gap:10px;align-items:end}.earning{background:var(--card);padding:13px;border-radius:13px;margin:9px 0;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.earning-title{font-weight:700}.earning-meta{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.65}
+.app{max-width:1120px}.panel{scroll-margin-top:78px}.quicknav{position:sticky;top:8px;z-index:5;display:flex;gap:8px;overflow-x:auto;padding:9px;margin:-4px 0 14px;background:rgba(20,16,37,.9);border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(12px);scrollbar-width:none}.quicknav::-webkit-scrollbar{display:none}.quicknav a{flex:0 0 auto;color:#ddd8ef;text-decoration:none;background:#332d55;border:1px solid #554a7b;border-radius:999px;padding:7px 11px;font-size:13px;font-weight:700}.quicknav a:hover{border-color:var(--purple2);color:#fff}.overview-split .stats,.overview-split .overview{grid-template-columns:repeat(2,1fr)}.finance-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ledgergrid{display:grid;grid-template-columns:.8fr 1fr 1.2fr 2fr auto;gap:10px;align-items:end}.ledger-entry{background:var(--card);padding:13px;border-radius:13px;margin:9px 0;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.ledger-title{font-weight:700}.ledger-meta{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.65}.income-chip{color:var(--green)}.expense-chip{color:#ff9aa2}.net-positive{color:var(--green)}.net-negative{color:var(--red)}
 @media(max-width:760px){body{padding:10px}.topgrid,.stats,.overview{grid-template-columns:repeat(2,1fr)}.formgrid,.profilegrid,.questgrid{grid-template-columns:1fr 1fr}.formgrid .wide,.profilegrid .wide,.questgrid .wide{grid-column:1/-1}.shopgrid{grid-template-columns:1fr 1fr}.shopgrid .wide{grid-column:1/-1}.task,.reward,.quest{grid-template-columns:1fr}.reward{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.split{grid-template-columns:1fr}h1{font-size:22px}}
-@media(max-width:760px){.earninggrid{grid-template-columns:1fr 1fr}.earninggrid .wide{grid-column:1/-1}.earning{grid-template-columns:1fr}}
+@media(max-width:760px){.quicknav{top:4px}.finance-overview{grid-template-columns:repeat(2,1fr)}.ledgergrid{grid-template-columns:1fr 1fr}.ledgergrid .wide{grid-column:1/-1}.ledger-entry{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="app">
 <section class="hero">
-  <h1>⚔️ 冒险者成长系统 V10</h1>
+  <h1>⚔️ 冒险者成长系统 V11</h1>
   <div class="identity" id="identity">冒险者 · 创业冒险者</div>
   <div class="topgrid">
     <div class="mini"><span class="muted">✨ 可用能力值</span><b class="power" id="power">0</b></div>
@@ -30,6 +31,11 @@
   <div class="focus" id="focusHint">今日焦点：先完成最紧急的任务。</div>
 </section>
 
+<nav class="quicknav" aria-label="页面导航">
+  <a href="#growth">成长概览</a><a href="#finance">收支账本</a><a href="#quests-panel">主线挑战</a><a href="#tasks-panel">任务大厅</a><a href="#rewards-panel">奖励商店</a><a href="#settings-panel">设置</a>
+</nav>
+
+<div class="split overview-split" id="growth">
 <section class="panel">
   <h2>📊 四维属性</h2>
   <div class="stats">
@@ -52,8 +58,9 @@
   <div class="progress"><span id="goalBar"></span></div>
   <div class="section-note" style="margin-top:7px">达到每日目标会额外获得 +1 能力值，每天仅触发一次。</div>
 </section>
+</div>
 
-<section class="panel">
+<section class="panel" id="week-panel">
   <h2>📈 近7天战报</h2>
   <div class="overview">
     <div class="overview-item"><span class="muted">完成任务</span><b id="weekDone">0</b></div>
@@ -63,26 +70,29 @@
   </div>
 </section>
 
-<section class="panel">
-  <h2>💰 每日收益</h2>
-  <div class="section-note">手动记录每天实际获得的收益；同一天再次保存会更新原记录，负数可用于记录亏损。</div>
-  <div class="overview">
-    <div class="overview-item"><span class="muted">今日收益</span><b class="green" id="earningToday">¥0.00</b></div>
-    <div class="overview-item"><span class="muted">近7天收益</span><b id="earningWeek">¥0.00</b></div>
-    <div class="overview-item"><span class="muted">本月收益</span><b class="power" id="earningMonth">¥0.00</b></div>
-    <div class="overview-item"><span class="muted">累计收益</span><b id="earningTotal">¥0.00</b></div>
+<section class="panel" id="finance">
+  <h2>💰 收支账本</h2>
+  <div class="section-note">按天记录经营收入与支出；同一天、同一类型再次保存会更新原记录。净收益 = 收入 − 支出。</div>
+  <div class="finance-overview">
+    <div class="overview-item"><span class="muted">今日收入</span><b class="green" id="incomeToday">¥0.00</b></div>
+    <div class="overview-item"><span class="muted">今日支出</span><b class="warn" id="expenseToday">¥0.00</b></div>
+    <div class="overview-item"><span class="muted">今日净收益</span><b id="netToday">¥0.00</b></div>
+    <div class="overview-item"><span class="muted">近7天净收益</span><b id="netWeek">¥0.00</b></div>
+    <div class="overview-item"><span class="muted">本月净收益</span><b class="power" id="netMonth">¥0.00</b></div>
+    <div class="overview-item"><span class="muted">累计净收益</span><b id="netTotal">¥0.00</b></div>
   </div>
-  <div class="earninggrid" style="margin-top:12px">
-    <div><label class="muted">收益日期</label><input id="earningDate" type="date"></div>
-    <div><label class="muted">当天收益（元）</label><input id="earningAmount" type="number" step="0.01" min="-99999999" max="99999999" placeholder="例如：30.00"></div>
-    <div class="wide"><label class="muted">备注（可选）</label><input id="earningNote" maxlength="40" placeholder="例如：4家拼多多店铺净利润"></div>
-    <button id="earningSubmit" onclick="saveEarning()">保存收益</button>
+  <div class="ledgergrid" style="margin-top:12px">
+    <div><label class="muted">类型</label><select id="financeType"><option value="income">收入</option><option value="expense">支出</option></select></div>
+    <div><label class="muted">日期</label><input id="financeDate" type="date"></div>
+    <div><label class="muted">金额（元）</label><input id="financeAmount" type="number" step="0.01" min="0" max="99999999" placeholder="例如：30.00"></div>
+    <div class="wide"><label class="muted">备注（可选）</label><input id="financeNote" maxlength="40" placeholder="例如：店铺净利润或推广费用"></div>
+    <button id="financeSubmit" onclick="saveFinanceRecord()">保存记录</button>
   </div>
-  <div class="notice" id="earningNotice"></div>
-  <div id="earnings"></div>
+  <div class="notice" id="financeNotice"></div>
+  <div id="ledger"></div>
 </section>
 
-<section class="panel">
+<section class="panel" id="quests-panel">
   <h2>🐉 主线 / Boss 挑战</h2>
   <div class="section-note">创建长期目标后，可把日常任务关联到主线；每完成一次关联任务，主线自动推进 1 格。达标后手动领取奖励。</div>
   <div id="quests"></div>
@@ -96,7 +106,7 @@
   <div class="notice" id="questNotice"></div>
 </section>
 
-<section class="panel">
+<section class="panel" id="tasks-panel">
   <h2>📜 任务大厅</h2>
   <div class="toolbar" id="filters">
     <button class="secondary active" data-filter="active" onclick="setFilter('active')">进行中</button>
@@ -127,7 +137,7 @@
 </section>
 
 <div class="split">
-<section class="panel">
+<section class="panel" id="rewards-panel">
   <h2>🎁 奖励商店</h2>
   <div class="section-note">兑换后奖励会存入背包；真正使用时才会扣除 1 次剩余数量。兑换只消耗可用能力值，不会降低等级。</div>
   <div id="rewards"></div>
@@ -138,19 +148,19 @@
   </div>
 </section>
 
-<section class="panel">
+<section class="panel" id="achievements-panel">
   <h2>🏆 成就</h2>
   <div id="badges"></div>
 </section>
 </div>
 
-<section class="panel">
+<section class="panel" id="logs-panel">
   <h2>📖 冒险日志</h2>
   <div id="logs"></div>
   <div class="toolbar"><button class="ghost" onclick="clearLogs()">清空日志</button></div>
 </section>
 
-<section class="panel">
+<section class="panel" id="settings-panel">
   <h2>⚙️ 设置与数据</h2>
   <div class="profilegrid" style="margin-bottom:14px">
     <div class="wide"><label class="muted">角色名称</label><input id="profileName" maxlength="20" placeholder="冒险者"></div>
@@ -173,7 +183,7 @@
 'use strict';
 const HOUR=3600000;
 const DAY=86400000;
-const STORE='rpg10';
+const STORE='rpg11';
 const attrNames={k:'认知力',b:'商业力',e:'执行力',h:'体力'};
 const attrIcons={k:'🧠',b:'💼',e:'⚡',h:'💪'};
 const priorityNames={high:'🔥 紧急',normal:'普通',low:'低优先'};
@@ -190,7 +200,11 @@ const freshV9=fresh;
 fresh=function(){const data=freshV9();data.version=10;data.earnings=[];return data};
 const normalizeV9=normalize;
 normalize=function(raw){const data=normalizeV9(raw);data.version=10;const seen=new Map();const list=Array.isArray(raw&&raw.earnings)?raw.earnings:[];for(const item of list){const date=String(item&&item.date||'');const amount=Number(item&&item.amount);if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(amount)||Math.abs(amount)>99999999)continue;seen.set(date,{id:item.id||uid(),date,amount:Math.round(amount*100)/100,note:String(item.note||'').slice(0,40),updatedAt:Number(item.updatedAt)||Date.now()})}data.earnings=[...seen.values()].sort((a,b)=>a.date.localeCompare(b.date)).slice(-1000);return data};
-function load(){let raw=null;for(const key of [STORE,'rpg9','rpg8','rpg7','rpg6','rpg5','rpg3']){try{const text=localStorage.getItem(key);if(text){raw=JSON.parse(text);break}}catch(e){}}return normalize(raw)}
+const freshV10=fresh;
+fresh=function(){const data=freshV10();data.version=11;data.expenses=[];return data};
+const normalizeV10=normalize;
+normalize=function(raw){const data=normalizeV10(raw);data.version=11;const validDate=date=>/^\d{4}-\d{2}-\d{2}$/.test(date);const expenses=new Map();for(const item of Array.isArray(raw&&raw.expenses)?raw.expenses:[]){const date=String(item&&item.date||'');const amount=Number(item&&item.amount);if(!validDate(date)||!Number.isFinite(amount)||amount<0||amount>99999999)continue;expenses.set(date,{id:item.id||uid(),date,amount:Math.round(amount*100)/100,note:String(item.note||'').slice(0,40),updatedAt:Number(item.updatedAt)||Date.now()})}const incomes=[];for(const item of data.earnings){if(item.amount>=0){incomes.push(item);continue}const old=expenses.get(item.date);expenses.set(item.date,{id:old&&old.id||uid(),date:item.date,amount:Math.round(((old&&old.amount||0)+Math.abs(item.amount))*100)/100,note:old&&old.note||item.note||'由旧版负收益迁移',updatedAt:Date.now()})}data.earnings=incomes.slice(-1000);data.expenses=[...expenses.values()].sort((a,b)=>a.date.localeCompare(b.date)).slice(-1000);return data};
+function load(){let raw=null;for(const key of [STORE,'rpg10','rpg9','rpg8','rpg7','rpg6','rpg5','rpg3']){try{const text=localStorage.getItem(key);if(text){raw=JSON.parse(text);break}}catch(e){}}return normalize(raw)}
 let d=load();
 function persist(){localStorage.setItem(STORE,JSON.stringify(d))}
 function log(msg){d.logs.unshift({t:Date.now(),m:msg});d.logs=d.logs.slice(0,100)}
@@ -204,13 +218,15 @@ function countTodayCompleted(){const today=todayKey();return d.history.filter(x=
 function countRecentCompleted(days=7){const from=Date.now()-(days-1)*DAY;return d.history.filter(x=>x.t>=from).length}
 function weeklyStats(){const from=Date.now()-6*DAY;const list=d.history.filter(x=>x.t>=from);const gains={k:0,b:0,e:0,h:0};list.forEach(x=>gains[x.a]=(gains[x.a]||0)+x.reward);const best=Object.entries(gains).sort((a,b)=>b[1]-a[1])[0];return{done:list.length,power:list.reduce((sum,x)=>sum+x.reward,0),best:best&&best[1]>0?`${attrIcons[best[0]]}${attrNames[best[0]]}`:'暂无'}}
 function formatMoney(value){const amount=Math.round((Number(value)||0)*100)/100;return`${amount<0?'-':''}¥${Math.abs(amount).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2})}`}
-function earningStats(){const today=todayKey();const month=today.slice(0,7);const recent=d.earnings.filter(x=>{const diff=dayDiff(x.date,today);return diff>=0&&diff<7});const sum=list=>Math.round(list.reduce((total,x)=>total+x.amount,0)*100)/100;return{today:sum(d.earnings.filter(x=>x.date===today)),week:sum(recent),month:sum(d.earnings.filter(x=>x.date.startsWith(month))),total:sum(d.earnings)}}
-function earningNotify(text,bad=false){const el=$('earningNotice');el.textContent=text;el.style.color=bad?'var(--red)':'var(--green)';clearTimeout(earningNotify.timer);earningNotify.timer=setTimeout(()=>el.textContent='',2600)}
-function syncEarningForm(){const date=$('earningDate').value||todayKey();$('earningDate').value=date;const item=d.earnings.find(x=>x.date===date);$('earningAmount').value=item?String(item.amount):'';$('earningNote').value=item?item.note:'';$('earningSubmit').textContent=item?'更新收益':'保存收益'}
-function saveEarning(){const date=$('earningDate').value;const raw=$('earningAmount').value.trim();const amount=Number(raw);const note=$('earningNote').value.trim().slice(0,40);if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||date>todayKey()){earningNotify('请选择今天或更早的有效日期',true);return}if(!raw||!Number.isFinite(amount)||Math.abs(amount)>99999999){earningNotify('请输入有效收益，范围为 -99999999～99999999',true);return}const value=Math.round(amount*100)/100;const existing=d.earnings.find(x=>x.date===date);if(existing){existing.amount=value;existing.note=note;existing.updatedAt=Date.now();log(`💰 更新 ${date} 收益：${formatMoney(value)}`)}else{d.earnings.push({id:uid(),date,amount:value,note,updatedAt:Date.now()});log(`💰 记录 ${date} 收益：${formatMoney(value)}`)}d.earnings.sort((a,b)=>a.date.localeCompare(b.date));persist();render();syncEarningForm();earningNotify(existing?'当天收益已更新':'当天收益已保存')}
-function editEarning(id){const item=d.earnings.find(x=>x.id===id);if(!item)return;$('earningDate').value=item.date;syncEarningForm();$('earningAmount').focus();$('earningAmount').scrollIntoView({behavior:'smooth',block:'center'})}
-function deleteEarning(id){const item=d.earnings.find(x=>x.id===id);if(!item||!confirm(`确认删除 ${item.date} 的收益记录？`))return;d.earnings=d.earnings.filter(x=>x.id!==id);log(`🗑️ 删除 ${item.date} 收益记录`);persist();render();syncEarningForm();earningNotify('收益记录已删除')}
-function renderEarnings(){const stats=earningStats();$('earningToday').textContent=formatMoney(stats.today);$('earningWeek').textContent=formatMoney(stats.week);$('earningMonth').textContent=formatMoney(stats.month);$('earningTotal').textContent=formatMoney(stats.total);const list=d.earnings.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,7);$('earnings').innerHTML=list.length?'<div class="section-note" style="margin:8px 0 2px">最近记录</div>'+list.map(x=>`<div class="earning"><div><div class="earning-title ${x.amount<0?'warn':'green'}">${x.date} · ${formatMoney(x.amount)}</div><div class="earning-meta">${x.note?esc(x.note):'无备注'}</div></div><div class="actions"><button class="secondary" onclick="editEarning('${x.id}')">编辑</button><button class="danger" onclick="deleteEarning('${x.id}')">删除</button></div></div>`).join(''):'<div class="empty">还没有收益记录，填写今天的收益开始统计。</div>'}
+function financeList(type){return type==='expense'?d.expenses:d.earnings}
+function financialStats(){const today=todayKey();const month=today.slice(0,7);const sum=(list,test)=>Math.round(list.filter(test).reduce((total,x)=>total+x.amount,0)*100)/100;const isToday=x=>x.date===today;const isWeek=x=>{const diff=dayDiff(x.date,today);return diff>=0&&diff<7};const isMonth=x=>x.date.startsWith(month);const all=()=>true;const result={};for(const [key,test] of [['today',isToday],['week',isWeek],['month',isMonth],['total',all]]){result[`income${key}`]=sum(d.earnings,test);result[`expense${key}`]=sum(d.expenses,test);result[`net${key}`]=Math.round((result[`income${key}`]-result[`expense${key}`])*100)/100}return result}
+function financeNotify(text,bad=false){const el=$('financeNotice');el.textContent=text;el.style.color=bad?'var(--red)':'var(--green)';clearTimeout(financeNotify.timer);financeNotify.timer=setTimeout(()=>el.textContent='',2600)}
+function syncFinanceForm(){const type=$('financeType').value==='expense'?'expense':'income';const date=$('financeDate').value||todayKey();$('financeDate').value=date;const item=financeList(type).find(x=>x.date===date);$('financeAmount').value=item?String(item.amount):'';$('financeNote').value=item?item.note:'';$('financeAmount').placeholder=type==='expense'?'例如：12.50':'例如：30.00';$('financeSubmit').textContent=item?`更新${type==='expense'?'支出':'收入'}`:`保存${type==='expense'?'支出':'收入'}`}
+function saveFinanceRecord(){const type=$('financeType').value==='expense'?'expense':'income';const date=$('financeDate').value;const raw=$('financeAmount').value.trim();const amount=Number(raw);const note=$('financeNote').value.trim().slice(0,40);if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||date>todayKey()){financeNotify('请选择今天或更早的有效日期',true);return}if(!raw||!Number.isFinite(amount)||amount<0.01||amount>99999999){financeNotify('请输入 0.01～99999999 的有效金额',true);return}const value=Math.round(amount*100)/100;const list=financeList(type);const existing=list.find(x=>x.date===date);const label=type==='expense'?'支出':'收入';if(existing){existing.amount=value;existing.note=note;existing.updatedAt=Date.now();log(`${type==='expense'?'💸':'💰'} 更新 ${date} ${label}：${formatMoney(value)}`)}else{list.push({id:uid(),date,amount:value,note,updatedAt:Date.now()});log(`${type==='expense'?'💸':'💰'} 记录 ${date} ${label}：${formatMoney(value)}`)}list.sort((a,b)=>a.date.localeCompare(b.date));persist();render();syncFinanceForm();financeNotify(existing?`${label}已更新`:`${label}已保存`)}
+function editFinanceRecord(type,id){const item=financeList(type).find(x=>x.id===id);if(!item)return;$('financeType').value=type;$('financeDate').value=item.date;syncFinanceForm();$('financeAmount').focus();$('financeAmount').scrollIntoView({behavior:'smooth',block:'center'})}
+function deleteFinanceRecord(type,id){const list=financeList(type);const item=list.find(x=>x.id===id);const label=type==='expense'?'支出':'收入';if(!item||!confirm(`确认删除 ${item.date} 的${label}记录？`))return;if(type==='expense')d.expenses=list.filter(x=>x.id!==id);else d.earnings=list.filter(x=>x.id!==id);log(`🗑️ 删除 ${item.date} ${label}记录`);persist();render();syncFinanceForm();financeNotify(`${label}记录已删除`)}
+function setNetValue(id,value){const el=$(id);el.textContent=formatMoney(value);el.classList.toggle('net-positive',value>=0);el.classList.toggle('net-negative',value<0)}
+function renderFinance(){const stats=financialStats();$('incomeToday').textContent=formatMoney(stats.incometoday);$('expenseToday').textContent=formatMoney(stats.expensetoday);setNetValue('netToday',stats.nettoday);setNetValue('netWeek',stats.netweek);setNetValue('netMonth',stats.netmonth);setNetValue('netTotal',stats.nettotal);const rows=[...d.earnings.map(x=>({...x,type:'income'})),...d.expenses.map(x=>({...x,type:'expense'}))].sort((a,b)=>b.date.localeCompare(a.date)||b.updatedAt-a.updatedAt).slice(0,10);$('ledger').innerHTML=rows.length?'<div class="section-note" style="margin:8px 0 2px">最近收支记录</div>'+rows.map(x=>{const expense=x.type==='expense';return`<div class="ledger-entry"><div><div class="ledger-title ${expense?'expense-chip':'income-chip'}">${expense?'支出':'收入'} · ${x.date} · ${expense?'-':''}${formatMoney(x.amount)}</div><div class="ledger-meta">${x.note?esc(x.note):'无备注'}</div></div><div class="actions"><button class="secondary" onclick="editFinanceRecord('${x.type}','${x.id}')">编辑</button><button class="danger" onclick="deleteFinanceRecord('${x.type}','${x.id}')">删除</button></div></div>`}).join(''):'<div class="empty">还没有收支记录，先填写今天的收入或支出。</div>'}
 function maybeDailyGoalBonus(){const today=todayKey();if(countTodayCompleted()>=d.dailyGoal&&!d.goalBonusDays.includes(today)){d.goalBonusDays.push(today);d.goalBonusDays=d.goalBonusDays.slice(-60);d.p+=1;d.xp+=1;log(`🎯 达成今日 ${d.dailyGoal} 个任务目标：额外 +1 能力值`);return true}return false}
 function advanceLinkedQuest(task){if(!task.questId)return false;const q=d.quests.find(v=>v.id===task.questId&&!v.claimed);if(!q||q.progress>=q.target)return false;q.progress+=1;if(q.progress===q.target)log(`🐉 主线「${q.n}」已达标，可以领取奖励`);else log(`🧭 主线「${q.n}」进度：${q.progress}/${q.target}`);return true}
 function completeTask(id){runMaintenance();const x=d.t.find(v=>v.id===id);if(!x||x.done)return;const cut=rewardPenalty();const reward=actualReward(x.r);x.done=true;x.completedAt=Date.now();d.history.push({id:uid(),taskId:x.id,n:x.n,a:x.a,reward,t:x.completedAt});d.history=d.history.slice(-500);d.p+=reward;d.xp+=reward;d[x.a]=Math.round((d[x.a]+reward)*10)/10;d.completed+=1;advanceLinkedQuest(x);const newDay=updateStreak();if(d.f>0)d.f-=1;log(`✅ 完成「${x.n}」：+${reward}能力值，${attrNames[x.a]} +${reward}${cut?`（疲劳减益 -${cut}）`:''}`);if(newDay&&d.streak>0&&d.streak%3===0){d.p+=1;d.xp+=1;log(`🔥 连续完成 ${d.streak} 天：额外 +1 能力值`)}maybeDailyGoalBonus();unlockAchievements();persist();render()}
@@ -249,17 +265,18 @@ function notify(text,bad=false){const el=$('notice');el.textContent=text;el.styl
 function saveProfile(){const name=$('profileName').value.trim();if(!name){notify('请输入角色名称',true);return}d.profile={name:name.slice(0,20),job:$('profileJob').value};log(`🪪 角色资料已更新：${d.profile.name} · ${d.profile.job}`);persist();notify('角色资料已保存');render()}
 function saveGoal(){const n=Math.floor(Number($('dailyGoal').value));if(!Number.isFinite(n)||n<1||n>20){notify('每日目标需为 1～20',true);return}d.dailyGoal=n;maybeDailyGoalBonus();persist();notify('每日目标已保存');render()}
 function exportData(){persist();const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`冒险者成长系统-${todayKey()}.json`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},0)}
-function importData(event){const file=event.target.files&&event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const parsed=JSON.parse(String(reader.result));if(!parsed||typeof parsed!=='object')throw new Error('bad');if(!confirm('导入会覆盖当前浏览器中的游戏数据，确认继续？'))return;d=normalize(parsed);log('📥 已导入存档');persist();render();notify('存档导入成功')}catch(e){notify('存档文件无效',true)}finally{event.target.value=''}};reader.readAsText(file)}
-function resetAll(){if(!confirm('确认重置全部数据？任务、属性、能力值和日志都会清空。'))return;if(!confirm('再次确认：此操作不可撤销，是否继续？'))return;d=fresh();persist();currentFilter='active';render();notify('已重置全部数据')}
-function render(){runMaintenance();unlockAchievements();persist();$('power').textContent=d.p.toFixed(d.p%1?1:0);const lv=Math.floor(d.xp/50)+1;const inLevel=d.xp%50;$('identity').textContent=`${d.profile.name} · ${d.profile.job}`;$('level').textContent=`Lv.${lv}`;$('streak').textContent=`${d.streak}天`;$('fatigue').textContent=d.f;$('know').textContent=d.k.toFixed(1);$('biz').textContent=d.b.toFixed(1);$('exec').textContent=d.e.toFixed(1);$('health').textContent=d.h.toFixed(1);$('levelBar').style.width=`${inLevel/50*100}%`;$('levelHint').textContent=`累计 ${d.xp} 能力值 · 距 Lv.${lv+1} 还需 ${50-inLevel}`;let state='状态：精力充沛';if(d.f>=10)state='状态：🥀 虚弱（任务奖励 -2）';else if(d.f>=5)state='状态：😵 疲惫（任务奖励 -1）';else if(d.streak>=7)state='状态：🔥 高度自律';else if(d.streak>=3)state='状态：⚡ 渐入佳境';$('state').textContent=state;const td=countTodayCompleted();$('todayDone').textContent=td;$('activeCount').textContent=d.t.filter(x=>!x.done).length;$('missCount').textContent=d.totalPenalty;$('goalText').textContent=`${td}/${d.dailyGoal}`;$('goalBar').style.width=`${Math.min(100,td/d.dailyGoal*100)}%`;const ws=weeklyStats();$('weekDone').textContent=ws.done;$('weekPower').textContent=ws.power;$('weekBest').textContent=ws.best;$('bossDone').textContent=d.bossCompleted;$('dailyGoal').value=d.dailyGoal;$('profileName').value=d.profile.name;$('profileJob').value=d.profile.job;const pWeight={high:0,normal:1,low:2};const pending=d.t.filter(x=>!x.done).slice().sort((a,b)=>pWeight[a.pri]-pWeight[b.pri]||taskDeadline(a)-taskDeadline(b));const activeQuest=d.quests.find(q=>!q.claimed);$('focusHint').textContent=pending.length?`今日焦点：${pending[0].n}（${priorityNames[pending[0].pri]}，${taskTimeText(pending[0])}） · 近7天已完成 ${ws.done} 项`:activeQuest?`今日焦点：推进主线「${activeQuest.n}」(${activeQuest.progress}/${activeQuest.target})`:`今日焦点：任务已清空，可以接取一个新的成长任务。近7天已完成 ${ws.done} 项`;refreshQuestOptions();renderQuests();renderTasks();renderRewards();renderBadges();renderEarnings();renderLogs()}
+function importData(event){const file=event.target.files&&event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const parsed=JSON.parse(String(reader.result));if(!parsed||typeof parsed!=='object')throw new Error('bad');if(!confirm('导入会覆盖当前浏览器中的游戏数据，确认继续？'))return;d=normalize(parsed);log('📥 已导入存档');persist();render();syncFinanceForm();notify('存档导入成功')}catch(e){notify('存档文件无效',true)}finally{event.target.value=''}};reader.readAsText(file)}
+function resetAll(){if(!confirm('确认重置全部数据？任务、属性、能力值、收支和日志都会清空。'))return;if(!confirm('再次确认：此操作不可撤销，是否继续？'))return;d=fresh();persist();currentFilter='active';render();syncFinanceForm();notify('已重置全部数据')}
+function render(){runMaintenance();unlockAchievements();persist();$('power').textContent=d.p.toFixed(d.p%1?1:0);const lv=Math.floor(d.xp/50)+1;const inLevel=d.xp%50;$('identity').textContent=`${d.profile.name} · ${d.profile.job}`;$('level').textContent=`Lv.${lv}`;$('streak').textContent=`${d.streak}天`;$('fatigue').textContent=d.f;$('know').textContent=d.k.toFixed(1);$('biz').textContent=d.b.toFixed(1);$('exec').textContent=d.e.toFixed(1);$('health').textContent=d.h.toFixed(1);$('levelBar').style.width=`${inLevel/50*100}%`;$('levelHint').textContent=`累计 ${d.xp} 能力值 · 距 Lv.${lv+1} 还需 ${50-inLevel}`;let state='状态：精力充沛';if(d.f>=10)state='状态：🥀 虚弱（任务奖励 -2）';else if(d.f>=5)state='状态：😵 疲惫（任务奖励 -1）';else if(d.streak>=7)state='状态：🔥 高度自律';else if(d.streak>=3)state='状态：⚡ 渐入佳境';$('state').textContent=state;const td=countTodayCompleted();$('todayDone').textContent=td;$('activeCount').textContent=d.t.filter(x=>!x.done).length;$('missCount').textContent=d.totalPenalty;$('goalText').textContent=`${td}/${d.dailyGoal}`;$('goalBar').style.width=`${Math.min(100,td/d.dailyGoal*100)}%`;const ws=weeklyStats();$('weekDone').textContent=ws.done;$('weekPower').textContent=ws.power;$('weekBest').textContent=ws.best;$('bossDone').textContent=d.bossCompleted;$('dailyGoal').value=d.dailyGoal;$('profileName').value=d.profile.name;$('profileJob').value=d.profile.job;const pWeight={high:0,normal:1,low:2};const pending=d.t.filter(x=>!x.done).slice().sort((a,b)=>pWeight[a.pri]-pWeight[b.pri]||taskDeadline(a)-taskDeadline(b));const activeQuest=d.quests.find(q=>!q.claimed);$('focusHint').textContent=pending.length?`今日焦点：${pending[0].n}（${priorityNames[pending[0].pri]}，${taskTimeText(pending[0])}） · 近7天已完成 ${ws.done} 项`:activeQuest?`今日焦点：推进主线「${activeQuest.n}」(${activeQuest.progress}/${activeQuest.target})`:`今日焦点：任务已清空，可以接取一个新的成长任务。近7天已完成 ${ws.done} 项`;refreshQuestOptions();renderQuests();renderTasks();renderRewards();renderBadges();renderFinance();renderLogs()}
 $('taskName').addEventListener('keydown',e=>{if(e.key==='Enter')submitTask()});
-$('earningDate').addEventListener('change',syncEarningForm);
-$('earningAmount').addEventListener('keydown',e=>{if(e.key==='Enter')saveEarning()});
+$('financeType').addEventListener('change',syncFinanceForm);
+$('financeDate').addEventListener('change',syncFinanceForm);
+$('financeAmount').addEventListener('keydown',e=>{if(e.key==='Enter')saveFinanceRecord()});
 window.addEventListener('storage',e=>{if(e.key===STORE){d=load();render()}});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)render()});
 syncTaskForm();
-$('earningDate').value=todayKey();
-syncEarningForm();
+$('financeDate').value=todayKey();
+syncFinanceForm();
 render();
 setInterval(render,60000);
 </script>

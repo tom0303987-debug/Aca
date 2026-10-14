@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>冒险者成长系统 V11</title>
+<title>冒险者成长系统 V12</title>
 <style>
 html{scroll-behavior:smooth}
 :root{--bg:#0e0c18;--panel:#24203d;--card:#332d55;--card2:#3d3565;--purple:#8d6cff;--purple2:#b09cff;--gold:#ffd54a;--green:#77e59b;--red:#ff7f88;--orange:#ffb56b;--muted:#b8b3cc;--line:rgba(255,255,255,.08)}
@@ -12,17 +12,19 @@ html{scroll-behavior:smooth}
 .app{max-width:1120px}.panel{scroll-margin-top:78px}.quicknav{position:sticky;top:8px;z-index:5;display:flex;gap:8px;overflow-x:auto;padding:9px;margin:-4px 0 14px;background:rgba(20,16,37,.9);border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(12px);scrollbar-width:none}.quicknav::-webkit-scrollbar{display:none}.quicknav a{flex:0 0 auto;color:#ddd8ef;text-decoration:none;background:#332d55;border:1px solid #554a7b;border-radius:999px;padding:7px 11px;font-size:13px;font-weight:700}.quicknav a:hover{border-color:var(--purple2);color:#fff}.overview-split .stats,.overview-split .overview{grid-template-columns:repeat(2,1fr)}.finance-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ledgergrid{display:grid;grid-template-columns:.8fr 1fr 1.2fr 2fr auto;gap:10px;align-items:end}.ledger-entry{background:var(--card);padding:13px;border-radius:13px;margin:9px 0;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.ledger-title{font-weight:700}.ledger-meta{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.65}.income-chip{color:var(--green)}.expense-chip{color:#ff9aa2}.net-positive{color:var(--green)}.net-negative{color:var(--red)}
 @media(max-width:760px){body{padding:10px}.topgrid,.stats,.overview{grid-template-columns:repeat(2,1fr)}.formgrid,.profilegrid,.questgrid{grid-template-columns:1fr 1fr}.formgrid .wide,.profilegrid .wide,.questgrid .wide{grid-column:1/-1}.shopgrid{grid-template-columns:1fr 1fr}.shopgrid .wide{grid-column:1/-1}.task,.reward,.quest{grid-template-columns:1fr}.reward{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.split{grid-template-columns:1fr}h1{font-size:22px}}
 @media(max-width:760px){.quicknav{top:4px}.finance-overview{grid-template-columns:repeat(2,1fr)}.ledgergrid{grid-template-columns:1fr 1fr}.ledgergrid .wide{grid-column:1/-1}.ledger-entry{grid-template-columns:1fr}}
+.checkin-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.checkin-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;margin:14px 0}.checkin-day{text-align:center;border:1px solid var(--line);background:#1e1a34;border-radius:12px;padding:12px 3px;font-size:12px;color:var(--muted)}.checkin-day b{display:block;margin-top:6px}.checkin-day.checked{border-color:var(--green);color:var(--green)}.checkin-day.today{box-shadow:0 0 0 2px var(--purple)}.checkin-form{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}.share-options{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0}.share-options label{display:flex;align-items:center;gap:6px;font-size:13px}.share-options input{width:auto;accent-color:var(--purple)}textarea{width:100%;resize:vertical;min-height:170px;background:#1e1a34;color:#fff;border:1px solid #5e557d;border-radius:10px;padding:12px;font:inherit;font-size:13px;line-height:1.7}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--purple2);outline-offset:3px}.local-status{display:inline-block;font-size:12px;color:var(--orange);border:1px solid #80643f;border-radius:999px;padding:4px 9px;margin-bottom:12px}.checkin-form>div{min-width:0}.checkin-note{overflow-wrap:anywhere}
+@media(max-width:760px){.checkin-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.checkin-form{grid-template-columns:1fr}.checkin-days{gap:4px}.checkin-day{padding:10px 1px;font-size:11px}}
 </style>
 </head>
 <body>
 <div class="app">
 <section class="hero">
-  <h1>⚔️ 冒险者成长系统 V11</h1>
+  <h1>⚔️ 冒险者成长系统 V12</h1>
   <div class="identity" id="identity">冒险者 · 创业冒险者</div>
   <div class="topgrid">
     <div class="mini"><span class="muted">✨ 可用能力值</span><b class="power" id="power">0</b></div>
     <div class="mini"><span class="muted">🆙 等级</span><b id="level">Lv.1</b></div>
-    <div class="mini"><span class="muted">🔥 连续天数</span><b class="green" id="streak">0天</b></div>
+    <div class="mini"><span class="muted">🔥 连续完成任务</span><b class="green" id="streak">0天</b></div>
     <div class="mini"><span class="muted">😴 疲劳值</span><b id="fatigue">0</b></div>
   </div>
   <div class="statusline" id="state">状态：新手冒险者</div>
@@ -32,8 +34,42 @@ html{scroll-behavior:smooth}
 </section>
 
 <nav class="quicknav" aria-label="页面导航">
-  <a href="#growth">成长概览</a><a href="#finance">收支账本</a><a href="#quests-panel">主线挑战</a><a href="#tasks-panel">任务大厅</a><a href="#rewards-panel">奖励商店</a><a href="#settings-panel">设置</a>
+  <a href="#checkin-panel">每日签到</a><a href="#growth">成长概览</a><a href="#supervision-panel">互相监督</a><a href="#finance">收支账本</a><a href="#quests-panel">主线挑战</a><a href="#tasks-panel">任务大厅</a><a href="#rewards-panel">奖励商店</a><a href="#settings-panel">设置</a>
 </nav>
+
+<section class="panel" id="checkin-panel">
+  <h2>🌤️ 每日签到</h2>
+  <div class="section-note">按北京时间（UTC+8）每天签到一次：+1 能力值，连续每满 7 天额外 +3。漏签不扣分、不补签；与连续完成任务独立统计，不增加任务完成数或四维属性。</div>
+  <div class="checkin-summary">
+    <div class="overview-item"><span class="muted">连续签到</span><b class="green" id="checkinStreak">0天</b></div>
+    <div class="overview-item"><span class="muted">最长连续</span><b id="checkinBest">0天</b></div>
+    <div class="overview-item"><span class="muted">本月签到</span><b id="checkinMonth">0天</b></div>
+    <div class="overview-item"><span class="muted">累计签到</span><b id="checkinTotal">0天</b></div>
+  </div>
+  <div class="checkin-days" id="checkinDays" aria-label="近七天签到记录"></div>
+  <div class="checkin-form">
+    <div><label class="muted" for="checkinNote">签到备注（可选，仅保存在本机）</label><input id="checkinNote" maxlength="120" placeholder="例如：今天先完成产品调研，再处理订单"></div>
+    <button id="checkinButton" onclick="dailyCheckIn()">今日签到 +1</button>
+  </div>
+  <p class="muted checkin-note" id="checkinHint"></p>
+  <div class="notice" id="checkinNotice" role="status" aria-live="polite"></div>
+</section>
+
+<section class="panel" id="supervision-panel">
+  <h2>🤝 互相监督</h2>
+  <span class="local-status">本地版 · 尚未联机</span>
+  <div class="section-note">先生成监督日报，检查内容后复制给伙伴。当前不会自动发送，也无法查看好友状态。日报为本人填写的本地记录，未经服务器验证。</div>
+  <div class="share-options">
+    <label><input id="shareTasks" type="checkbox" onchange="refreshReportPreview()">包含已完成任务名称</label>
+    <label><input id="shareCheckinNote" type="checkbox" onchange="refreshReportPreview()">包含签到备注</label>
+    <label><input id="shareFinance" type="checkbox" onchange="refreshReportPreview()">包含今日收支金额（敏感）</label>
+  </div>
+  <div class="toolbar"><button onclick="generateSupervisionReport()">生成 / 更新日报</button><button class="secondary" id="copyReport" onclick="copySupervisionReport()" disabled>复制日报</button></div>
+  <label class="muted" for="supervisionPreview">发送前预览（仅显示已选择的内容）</label>
+  <textarea id="supervisionPreview" readonly placeholder="点击生成日报；默认不包含任务名称、签到备注和财务信息。"></textarea>
+  <div class="notice" id="supervisionNotice" role="status" aria-live="polite"></div>
+  <details><summary>后续联机计划</summary><p class="muted">账号登录 → 双方同意结为监督伙伴 → 按授权分享签到与任务进度 → 留言鼓励与站内提醒。收支默认私密；支持解除伙伴关系与撤回共享。需要配置云端数据库、权限和服务端签到校验后才会启用，不会自动上传现有存档。</p></details>
+</section>
 
 <div class="split overview-split" id="growth">
 <section class="panel">
@@ -183,7 +219,7 @@ html{scroll-behavior:smooth}
 'use strict';
 const HOUR=3600000;
 const DAY=86400000;
-const STORE='rpg11';
+const STORE='rpg12';
 const attrNames={k:'认知力',b:'商业力',e:'执行力',h:'体力'};
 const attrIcons={k:'🧠',b:'💼',e:'⚡',h:'💪'};
 const priorityNames={high:'🔥 紧急',normal:'普通',low:'低优先'};
@@ -204,10 +240,77 @@ const freshV10=fresh;
 fresh=function(){const data=freshV10();data.version=11;data.expenses=[];return data};
 const normalizeV10=normalize;
 normalize=function(raw){const data=normalizeV10(raw);data.version=11;const validDate=date=>/^\d{4}-\d{2}-\d{2}$/.test(date);const expenses=new Map();for(const item of Array.isArray(raw&&raw.expenses)?raw.expenses:[]){const date=String(item&&item.date||'');const amount=Number(item&&item.amount);if(!validDate(date)||!Number.isFinite(amount)||amount<0||amount>99999999)continue;expenses.set(date,{id:item.id||uid(),date,amount:Math.round(amount*100)/100,note:String(item.note||'').slice(0,40),updatedAt:Number(item.updatedAt)||Date.now()})}const incomes=[];for(const item of data.earnings){if(item.amount>=0){incomes.push(item);continue}const old=expenses.get(item.date);expenses.set(item.date,{id:old&&old.id||uid(),date:item.date,amount:Math.round(((old&&old.amount||0)+Math.abs(item.amount))*100)/100,note:old&&old.note||item.note||'由旧版负收益迁移',updatedAt:Date.now()})}data.earnings=incomes.slice(-1000);data.expenses=[...expenses.values()].sort((a,b)=>a.date.localeCompare(b.date)).slice(-1000);return data};
-function load(){let raw=null;for(const key of [STORE,'rpg10','rpg9','rpg8','rpg7','rpg6','rpg5','rpg3']){try{const text=localStorage.getItem(key);if(text){raw=JSON.parse(text);break}}catch(e){}}return normalize(raw)}
+const CHECKIN_TIMEZONE='Asia/Shanghai';
+function checkinDay(ts=Date.now()){const date=new Date(Number(ts)+8*HOUR);return Number.isFinite(date.getTime())?date.toISOString().slice(0,10):''}
+function validCheckinDay(date){if(!/^\d{4}-\d{2}-\d{2}$/.test(date))return false;const ts=Date.parse(date+'T00:00:00Z');return Number.isFinite(ts)&&new Date(ts).toISOString().slice(0,10)===date}
+function shiftCheckinDay(date,offset){return new Date(Date.parse(date+'T00:00:00Z')+offset*DAY).toISOString().slice(0,10)}
+const freshV11=fresh;
+fresh=function(){const data=freshV11();data.version=12;data.localProfileId=uid();data.checkins=[];return data};
+const normalizeV11=normalize;
+normalize=function(raw){const data=normalizeV11(raw);data.version=12;data.localProfileId=/^[a-zA-Z0-9-]{6,80}$/.test(String(data.localProfileId||''))?data.localProfileId:uid();const records=new Map();for(const item of Array.isArray(raw&&raw.checkins)?raw.checkins:[]){if(!item||typeof item!=='object')continue;const date=String(item.date||'');const checkedAt=Number(item.checkedAt);if(!validCheckinDay(date)||date>checkinDay()||!Number.isFinite(checkedAt)||checkedAt<0||checkedAt>8640000000000000-8*HOUR||checkinDay(checkedAt)!==date)continue;if(!records.has(date))records.set(date,{id:'checkin:'+date,date,checkedAt,timeZone:CHECKIN_TIMEZONE,note:String(item.note||'').slice(0,120),reward:item.reward===4?4:1,source:'local-self-report'})}data.checkins=[...records.values()].sort((a,b)=>a.date.localeCompare(b.date));return data};
+function load(){let raw=null;for(const key of [STORE,'rpg11','rpg10','rpg9','rpg8','rpg7','rpg6','rpg5','rpg3']){try{const text=localStorage.getItem(key);if(text){raw=JSON.parse(text);break}}catch(e){}}return normalize(raw)}
 let d=load();
 function persist(){localStorage.setItem(STORE,JSON.stringify(d))}
 function log(msg){d.logs.unshift({t:Date.now(),m:msg});d.logs=d.logs.slice(0,100)}
+function checkinStats(data=d,today=checkinDay()){
+  const dates=[...new Set(data.checkins.map(x=>x.date).filter(x=>x<=today))].sort();
+  const days=new Set(dates);let best=0,run=0,previous='';
+  for(const date of dates){run=previous&&shiftCheckinDay(previous,1)===date?run+1:1;best=Math.max(best,run);previous=date}
+  let current=days.has(today)?today:shiftCheckinDay(today,-1),streak=0;
+  while(days.has(current)){streak++;current=shiftCheckinDay(current,-1)}
+  return{streak,best,total:dates.length,month:dates.filter(x=>x.startsWith(today.slice(0,7))).length,checked:days.has(today)};
+}
+function checkinMessage(text,bad=false){$('checkinNotice').textContent=text;$('checkinNotice').style.color=bad?'var(--red)':'var(--green)'}
+let checkinBusy=false;
+async function dailyCheckIn(){
+  if(checkinBusy)return;renderCheckin();checkinBusy=true;$('checkinButton').disabled=true;
+  const note=$('checkinNote').value.trim().slice(0,120);
+  const commit=()=>{
+    // Re-read under the same-origin lock so a stale tab cannot award today twice.
+    const saved=localStorage.getItem(STORE);if(saved)d=normalize(JSON.parse(saved));
+    const today=checkinDay();
+    if(d.checkins.some(x=>x.date===today)){checkinMessage('今天已经签到，不会重复发放奖励。');return}
+    const before=JSON.stringify(d);const streak=checkinStats(d,today).streak+1;const reward=1+(streak%7===0?3:0);
+    d.checkins.push({id:'checkin:'+today,date:today,checkedAt:Date.now(),timeZone:CHECKIN_TIMEZONE,note,reward,source:'local-self-report'});
+    d.p+=reward;d.xp+=reward;log(`🌤️ 签到第 ${streak} 天：+${reward} 能力值${reward===4?'（含连续7天奖励 +3）':''}`);
+    try{persist()}catch(error){d=JSON.parse(before);throw error}
+    checkinMessage(`签到成功！+${reward} 能力值${reward===4?'，已获得本轮连续7天奖励。':'，明天继续。'}`);
+  };
+  try{
+    if(navigator.locks&&navigator.locks.request)await navigator.locks.request(STORE+':checkin',commit);
+    else commit();
+    render();
+  }catch(error){checkinMessage('签到未能完成，请检查浏览器是否允许本地存储，并重新尝试。',true)}
+  finally{checkinBusy=false;renderCheckin()}
+}
+function renderCheckin(){
+  const today=checkinDay(),stats=checkinStats(),record=d.checkins.find(x=>x.date===today);
+  $('checkinStreak').textContent=stats.streak+'天';$('checkinBest').textContent=stats.best+'天';$('checkinMonth').textContent=stats.month+'天';$('checkinTotal').textContent=stats.total+'天';
+  $('checkinButton').disabled=!!record||checkinBusy;$('checkinButton').textContent=record?'今日已签到 ✓':`今日签到 +${(stats.streak+1)%7===0?4:1}`;
+  const input=$('checkinNote');if(input.dataset.day!==today){input.value='';input.dataset.day=today;$('checkinNotice').textContent=''}
+  if(!record&&input.dataset.recordId)input.value='';
+  input.dataset.recordId=record?record.id:'';input.disabled=!!record;if(record)input.value=record.note;
+  $('checkinHint').textContent=`北京时间 ${today} · ${record?`今日已获得 ${record.reward} 能力值；距下次7天奖励还需 ${7-stats.streak%7} 天。`:`今日尚未签到；签到后连续 ${stats.streak+1} 天。`}`;
+  const days=new Set(d.checkins.map(x=>x.date));
+  $('checkinDays').innerHTML=Array.from({length:7},(_,i)=>{const date=shiftCheckinDay(today,i-6),checked=days.has(date);return`<div class="checkin-day ${checked?'checked':''} ${date===today?'today':''}" aria-label="${date} ${checked?'已签到':'未签到'}">${date.slice(5)}<b>${checked?'✓ 已签':date===today?'今日':'未签'}</b></div>`}).join('');
+}
+function buildSupervisionReport(options={},data=d,now=Date.now()){
+  const today=checkinDay(now),stats=checkinStats(data,today),record=data.checkins.find(x=>x.date===today);
+  const completed=data.history.filter(x=>checkinDay(x.t)===today);
+  const lines=[`【成长监督日报】${today}（北京时间）`,`今日签到：${record?'已签到':'未签到'}｜连续签到：${stats.streak} 天`,`今日完成任务：${completed.length} / 目标 ${data.dailyGoal} 项`];
+  if(options.tasks)lines.push('已完成任务：',...(completed.length?completed.map(x=>'· '+x.n):['暂无']));
+  if(options.note)lines.push('签到备注：'+(record&&record.note||'暂无'));
+  if(options.finance){const sum=list=>list.filter(x=>x.date===today).reduce((total,x)=>total+Math.round(x.amount*100),0)/100;const income=sum(data.earnings),expense=sum(data.expenses);lines.push(`今日收入：${formatMoney(income)}`,`今日支出：${formatMoney(expense)}`,`今日净收益：${formatMoney(income-expense)}`)}
+  lines.push('本地自报 · 未经服务器验证 · 非实时同步');return lines.join('\n');
+}
+let reportGenerated=false;
+function refreshReportPreview(){if(!reportGenerated)return;$('supervisionPreview').value=buildSupervisionReport({tasks:$('shareTasks').checked,note:$('shareCheckinNote').checked,finance:$('shareFinance').checked});$('supervisionNotice').textContent='内容更新后，请重新检查并复制；已发给他人的旧日报不会自动更新。'}
+function generateSupervisionReport(){reportGenerated=true;refreshReportPreview();$('copyReport').disabled=false;$('supervisionNotice').textContent='已生成预览，尚未发送。请检查勾选内容后再复制。'}
+async function copySupervisionReport(){
+  if(!reportGenerated)return;refreshReportPreview();
+  try{await navigator.clipboard.writeText($('supervisionPreview').value);$('supervisionNotice').textContent='已复制，请自行粘贴给监督伙伴；没有自动发送。'}
+  catch(error){$('supervisionPreview').focus();$('supervisionPreview').select();$('supervisionNotice').textContent='浏览器不支持或未允许复制，请在上方选中文字手动复制。'}
+}
 function applyPenalty(x){d[x.a]=Math.max(0,Math.round((d[x.a]-.5)*10)/10);d.f+=1;d.totalPenalty+=1;x.misses=(x.misses||0)+1;x.penalty=true;log(`⏰「${x.n}」漏做：${attrNames[x.a]} -0.5，疲劳 +1`)}
 function taskDeadline(x){return x.time+(x.repeat==='daily'?DAY:x.limitHours*HOUR)}
 function runMaintenance(){let changed=false;const now=Date.now();for(const x of d.t){if(x.repeat==='daily'){let guard=0;while(now-x.time>=DAY&&guard<365){if(!x.done&&!x.penalty)applyPenalty(x);x.time+=DAY;x.done=false;x.penalty=false;x.completedAt=null;guard++;changed=true}}else if(!x.done&&!x.penalty&&now>=taskDeadline(x)){applyPenalty(x);changed=true}}if(unlockAchievements())changed=true;if(changed)persist()}
@@ -266,8 +369,8 @@ function saveProfile(){const name=$('profileName').value.trim();if(!name){notify
 function saveGoal(){const n=Math.floor(Number($('dailyGoal').value));if(!Number.isFinite(n)||n<1||n>20){notify('每日目标需为 1～20',true);return}d.dailyGoal=n;maybeDailyGoalBonus();persist();notify('每日目标已保存');render()}
 function exportData(){persist();const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`冒险者成长系统-${todayKey()}.json`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},0)}
 function importData(event){const file=event.target.files&&event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const parsed=JSON.parse(String(reader.result));if(!parsed||typeof parsed!=='object')throw new Error('bad');if(!confirm('导入会覆盖当前浏览器中的游戏数据，确认继续？'))return;d=normalize(parsed);log('📥 已导入存档');persist();render();syncFinanceForm();notify('存档导入成功')}catch(e){notify('存档文件无效',true)}finally{event.target.value=''}};reader.readAsText(file)}
-function resetAll(){if(!confirm('确认重置全部数据？任务、属性、能力值、收支和日志都会清空。'))return;if(!confirm('再次确认：此操作不可撤销，是否继续？'))return;d=fresh();persist();currentFilter='active';render();syncFinanceForm();notify('已重置全部数据')}
-function render(){runMaintenance();unlockAchievements();persist();$('power').textContent=d.p.toFixed(d.p%1?1:0);const lv=Math.floor(d.xp/50)+1;const inLevel=d.xp%50;$('identity').textContent=`${d.profile.name} · ${d.profile.job}`;$('level').textContent=`Lv.${lv}`;$('streak').textContent=`${d.streak}天`;$('fatigue').textContent=d.f;$('know').textContent=d.k.toFixed(1);$('biz').textContent=d.b.toFixed(1);$('exec').textContent=d.e.toFixed(1);$('health').textContent=d.h.toFixed(1);$('levelBar').style.width=`${inLevel/50*100}%`;$('levelHint').textContent=`累计 ${d.xp} 能力值 · 距 Lv.${lv+1} 还需 ${50-inLevel}`;let state='状态：精力充沛';if(d.f>=10)state='状态：🥀 虚弱（任务奖励 -2）';else if(d.f>=5)state='状态：😵 疲惫（任务奖励 -1）';else if(d.streak>=7)state='状态：🔥 高度自律';else if(d.streak>=3)state='状态：⚡ 渐入佳境';$('state').textContent=state;const td=countTodayCompleted();$('todayDone').textContent=td;$('activeCount').textContent=d.t.filter(x=>!x.done).length;$('missCount').textContent=d.totalPenalty;$('goalText').textContent=`${td}/${d.dailyGoal}`;$('goalBar').style.width=`${Math.min(100,td/d.dailyGoal*100)}%`;const ws=weeklyStats();$('weekDone').textContent=ws.done;$('weekPower').textContent=ws.power;$('weekBest').textContent=ws.best;$('bossDone').textContent=d.bossCompleted;$('dailyGoal').value=d.dailyGoal;$('profileName').value=d.profile.name;$('profileJob').value=d.profile.job;const pWeight={high:0,normal:1,low:2};const pending=d.t.filter(x=>!x.done).slice().sort((a,b)=>pWeight[a.pri]-pWeight[b.pri]||taskDeadline(a)-taskDeadline(b));const activeQuest=d.quests.find(q=>!q.claimed);$('focusHint').textContent=pending.length?`今日焦点：${pending[0].n}（${priorityNames[pending[0].pri]}，${taskTimeText(pending[0])}） · 近7天已完成 ${ws.done} 项`:activeQuest?`今日焦点：推进主线「${activeQuest.n}」(${activeQuest.progress}/${activeQuest.target})`:`今日焦点：任务已清空，可以接取一个新的成长任务。近7天已完成 ${ws.done} 项`;refreshQuestOptions();renderQuests();renderTasks();renderRewards();renderBadges();renderFinance();renderLogs()}
+function resetAll(){if(!confirm('确认重置全部数据？任务、属性、能力值、收支、签到和日志都会清空。'))return;if(!confirm('再次确认：此操作不可撤销，是否继续？'))return;d=fresh();persist();reportGenerated=false;for(const id of ['shareTasks','shareCheckinNote','shareFinance'])$(id).checked=false;$('supervisionPreview').value='';$('supervisionNotice').textContent='';$('copyReport').disabled=true;currentFilter='active';render();syncFinanceForm();notify('已重置全部数据')}
+function render(){runMaintenance();unlockAchievements();persist();$('power').textContent=d.p.toFixed(d.p%1?1:0);const lv=Math.floor(d.xp/50)+1;const inLevel=d.xp%50;$('identity').textContent=`${d.profile.name} · ${d.profile.job}`;$('level').textContent=`Lv.${lv}`;$('streak').textContent=`${d.streak}天`;$('fatigue').textContent=d.f;$('know').textContent=d.k.toFixed(1);$('biz').textContent=d.b.toFixed(1);$('exec').textContent=d.e.toFixed(1);$('health').textContent=d.h.toFixed(1);$('levelBar').style.width=`${inLevel/50*100}%`;$('levelHint').textContent=`累计 ${d.xp} 能力值 · 距 Lv.${lv+1} 还需 ${50-inLevel}`;let state='状态：精力充沛';if(d.f>=10)state='状态：🥀 虚弱（任务奖励 -2）';else if(d.f>=5)state='状态：😵 疲惫（任务奖励 -1）';else if(d.streak>=7)state='状态：🔥 高度自律';else if(d.streak>=3)state='状态：⚡ 渐入佳境';$('state').textContent=state;const td=countTodayCompleted();$('todayDone').textContent=td;$('activeCount').textContent=d.t.filter(x=>!x.done).length;$('missCount').textContent=d.totalPenalty;$('goalText').textContent=`${td}/${d.dailyGoal}`;$('goalBar').style.width=`${Math.min(100,td/d.dailyGoal*100)}%`;const ws=weeklyStats();$('weekDone').textContent=ws.done;$('weekPower').textContent=ws.power;$('weekBest').textContent=ws.best;$('bossDone').textContent=d.bossCompleted;$('dailyGoal').value=d.dailyGoal;$('profileName').value=d.profile.name;$('profileJob').value=d.profile.job;const pWeight={high:0,normal:1,low:2};const pending=d.t.filter(x=>!x.done).slice().sort((a,b)=>pWeight[a.pri]-pWeight[b.pri]||taskDeadline(a)-taskDeadline(b));const activeQuest=d.quests.find(q=>!q.claimed);$('focusHint').textContent=pending.length?`今日焦点：${pending[0].n}（${priorityNames[pending[0].pri]}，${taskTimeText(pending[0])}） · 近7天已完成 ${ws.done} 项`:activeQuest?`今日焦点：推进主线「${activeQuest.n}」(${activeQuest.progress}/${activeQuest.target})`:`今日焦点：任务已清空，可以接取一个新的成长任务。近7天已完成 ${ws.done} 项`;refreshQuestOptions();renderQuests();renderTasks();renderRewards();renderBadges();renderFinance();renderLogs();renderCheckin();refreshReportPreview()}
 $('taskName').addEventListener('keydown',e=>{if(e.key==='Enter')submitTask()});
 $('financeType').addEventListener('change',syncFinanceForm);
 $('financeDate').addEventListener('change',syncFinanceForm);

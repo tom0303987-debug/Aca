@@ -3,109 +3,169 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>冒险者成长系统 V5</title>
+<title>冒险者成长系统 V6</title>
 <style>
-:root{--bg:#120f22;--panel:#24203d;--card:#332d55;--card2:#3a3360;--purple:#8d6cff;--purple2:#b09cff;--gold:#ffd54a;--green:#77e59b;--red:#ff7f88;--muted:#b8b3cc}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#251b48 0,#120f22 48%,#0d0b18 100%);color:#fff;font-family:"Microsoft YaHei",system-ui,-apple-system,sans-serif;min-height:100vh;padding:18px}.app{max-width:820px;margin:auto}.hero,.panel{background:rgba(36,32,61,.96);border:1px solid rgba(141,108,255,.5);border-radius:18px;box-shadow:0 12px 35px rgba(0,0,0,.28);padding:18px;margin-bottom:14px}.hero{border:2px solid var(--purple)}h1{margin:0 0 14px;font-size:26px}h2{font-size:19px;margin:4px 0 12px}.topgrid,.stats,.formgrid,.shopgrid{display:grid;gap:10px}.topgrid{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:repeat(4,1fr)}.mini,.stat{background:var(--card);border-radius:12px;padding:12px}.mini b,.stat b{display:block;font-size:20px;margin-top:4px}.power{color:var(--gold)}.green{color:var(--green)}.warn{color:var(--red)}.muted{color:var(--muted);font-size:13px}.statusline{margin-top:10px;color:var(--purple2)}.task{background:var(--card);padding:13px;border-radius:13px;margin:9px 0;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.task.done{opacity:.62}.task.overdue{border:1px solid rgba(255,127,136,.65)}.task-title{font-weight:700}.task-meta{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.55}.actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}button{border:0;border-radius:9px;background:var(--purple);color:#fff;padding:9px 13px;cursor:pointer;font-weight:700}button.secondary{background:#51496f}button.danger{background:#7c3945}button:disabled{opacity:.45;cursor:not-allowed}input,select{width:100%;border:1px solid #5e557d;background:#1e1a34;color:#fff;border-radius:9px;padding:10px;outline:none}.formgrid{grid-template-columns:2fr 1fr 1fr auto;align-items:end}.shopgrid{grid-template-columns:1fr auto auto;align-items:end}.reward{background:var(--card);padding:12px;border-radius:11px;margin:8px 0;display:flex;align-items:center;justify-content:space-between;gap:12px}.badge{display:inline-block;background:#4a416e;border:1px solid #7566ad;border-radius:999px;padding:6px 10px;margin:4px 4px 0 0;font-size:13px}.locked{opacity:.35}.log{font-size:13px;color:var(--muted);padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08)}.notice{min-height:24px;margin-top:8px;font-size:13px;color:var(--green)}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.section-note{font-size:12px;color:var(--muted);margin:-4px 0 10px}.empty{color:var(--muted);padding:10px 0}.footer{color:#8f88a5;text-align:center;font-size:12px;padding:10px 0 24px}@media(max-width:700px){body{padding:10px}.topgrid,.stats{grid-template-columns:repeat(2,1fr)}.formgrid{grid-template-columns:1fr 1fr}.formgrid .wide{grid-column:1/-1}.shopgrid{grid-template-columns:1fr 1fr}.shopgrid .wide{grid-column:1/-1}.task{grid-template-columns:1fr}.actions{justify-content:flex-start}h1{font-size:22px}}
+:root{--bg:#0e0c18;--panel:#24203d;--card:#332d55;--card2:#3d3565;--purple:#8d6cff;--purple2:#b09cff;--gold:#ffd54a;--green:#77e59b;--red:#ff7f88;--orange:#ffb56b;--muted:#b8b3cc;--line:rgba(255,255,255,.08)}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#261c49 0,#120f22 42%,#0b0913 100%);color:#fff;font-family:"Microsoft YaHei",system-ui,-apple-system,sans-serif;min-height:100vh;padding:18px}.app{max-width:900px;margin:auto}.hero,.panel{background:rgba(36,32,61,.96);border:1px solid rgba(141,108,255,.45);border-radius:18px;box-shadow:0 12px 35px rgba(0,0,0,.28);padding:18px;margin-bottom:14px}.hero{border:2px solid var(--purple)}h1{margin:0 0 14px;font-size:26px}h2{font-size:19px;margin:3px 0 12px}.topgrid,.stats,.overview,.formgrid,.shopgrid,.settinggrid{display:grid;gap:10px}.topgrid{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:repeat(4,1fr)}.overview{grid-template-columns:repeat(4,1fr)}.mini,.stat,.overview-item{background:var(--card);border-radius:12px;padding:12px}.mini b,.stat b,.overview-item b{display:block;font-size:20px;margin-top:4px}.power{color:var(--gold)}.green{color:var(--green)}.warn{color:var(--red)}.orange{color:var(--orange)}.muted{color:var(--muted);font-size:13px}.statusline{margin-top:10px;color:var(--purple2);line-height:1.6}.progress{height:9px;background:#19162a;border-radius:999px;overflow:hidden;margin-top:10px}.progress>span{display:block;height:100%;background:linear-gradient(90deg,var(--purple),var(--green));width:0;transition:width .25s}.task{background:var(--card);padding:13px;border-radius:13px;margin:9px 0;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.task.done{opacity:.65}.task.overdue{border:1px solid rgba(255,127,136,.7)}.task.daily{box-shadow:inset 3px 0 0 rgba(119,229,155,.7)}.task-title{font-weight:700}.task-meta{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.65}.pill{display:inline-block;padding:3px 7px;border-radius:999px;background:#4b426f;margin-right:5px;margin-top:4px}.actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}button{border:0;border-radius:9px;background:var(--purple);color:#fff;padding:9px 13px;cursor:pointer;font-weight:700}button.secondary{background:#51496f}button.danger{background:#7c3945}button.ghost{background:transparent;border:1px solid #665b89}button.active{outline:2px solid var(--purple2)}button:disabled{opacity:.45;cursor:not-allowed}input,select{width:100%;border:1px solid #5e557d;background:#1e1a34;color:#fff;border-radius:9px;padding:10px;outline:none}.formgrid{grid-template-columns:2fr 1fr 1fr 1fr auto;align-items:end}.shopgrid{grid-template-columns:1fr auto auto;align-items:end}.settinggrid{grid-template-columns:1fr auto;align-items:end}.reward{background:var(--card);padding:12px;border-radius:11px;margin:8px 0;display:flex;align-items:center;justify-content:space-between;gap:12px}.badge{display:inline-block;background:#4a416e;border:1px solid #7566ad;border-radius:999px;padding:6px 10px;margin:4px 4px 0 0;font-size:13px}.badge.locked{opacity:.3}.log{font-size:13px;color:var(--muted);padding:8px 0;border-bottom:1px solid var(--line);line-height:1.5}.notice{min-height:24px;margin-top:8px;font-size:13px;color:var(--green)}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.section-note{font-size:12px;color:var(--muted);margin:-4px 0 10px;line-height:1.55}.empty{color:var(--muted);padding:10px 0}.footer{color:#8f88a5;text-align:center;font-size:12px;padding:10px 0 24px}.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}.filebtn{display:inline-block;background:#51496f;padding:9px 13px;border-radius:9px;font-weight:700;cursor:pointer}.filebtn input{display:none}.dangerbox{border:1px solid rgba(255,127,136,.25);border-radius:12px;padding:12px;margin-top:12px}.smallnum{max-width:110px}
+@media(max-width:760px){body{padding:10px}.topgrid,.stats,.overview{grid-template-columns:repeat(2,1fr)}.formgrid{grid-template-columns:1fr 1fr}.formgrid .wide{grid-column:1/-1}.shopgrid{grid-template-columns:1fr 1fr}.shopgrid .wide{grid-column:1/-1}.task{grid-template-columns:1fr}.actions{justify-content:flex-start}.split{grid-template-columns:1fr}h1{font-size:22px}}
 </style>
 </head>
 <body>
 <div class="app">
-  <section class="hero">
-    <h1>⚔️ 冒险者成长系统 V5</h1>
-    <div class="topgrid">
-      <div class="mini"><span class="muted">✨ 可用能力值</span><b class="power" id="power">0</b></div>
-      <div class="mini"><span class="muted">🆙 等级</span><b id="level">Lv.1</b></div>
-      <div class="mini"><span class="muted">🔥 连续天数</span><b class="green" id="streak">0天</b></div>
-      <div class="mini"><span class="muted">😴 疲劳值</span><b id="fatigue">0</b></div>
-    </div>
-    <div class="statusline" id="state">状态：新手冒险者</div>
-  </section>
+<section class="hero">
+  <h1>⚔️ 冒险者成长系统 V6</h1>
+  <div class="topgrid">
+    <div class="mini"><span class="muted">✨ 可用能力值</span><b class="power" id="power">0</b></div>
+    <div class="mini"><span class="muted">🆙 等级</span><b id="level">Lv.1</b></div>
+    <div class="mini"><span class="muted">🔥 连续天数</span><b class="green" id="streak">0天</b></div>
+    <div class="mini"><span class="muted">😴 疲劳值</span><b id="fatigue">0</b></div>
+  </div>
+  <div class="statusline" id="state">状态：新手冒险者</div>
+  <div class="progress"><span id="levelBar"></span></div>
+  <div class="muted" id="levelHint" style="margin-top:6px"></div>
+</section>
 
-  <section class="panel">
-    <h2>📊 四维属性</h2>
-    <div class="stats">
-      <div class="stat">🧠 认知力<b id="know">0.0</b></div>
-      <div class="stat">💼 商业力<b id="biz">0.0</b></div>
-      <div class="stat">⚡ 执行力<b id="exec">0.0</b></div>
-      <div class="stat">💪 体力<b id="health">0.0</b></div>
-    </div>
-    <div class="section-note">规则：任务接取后 24 小时内未完成，会对该任务对应属性 -0.5，疲劳值 +1；每个任务只惩罚一次。</div>
-  </section>
+<section class="panel">
+  <h2>📊 四维属性</h2>
+  <div class="stats">
+    <div class="stat">🧠 认知力<b id="know">0.0</b></div>
+    <div class="stat">💼 商业力<b id="biz">0.0</b></div>
+    <div class="stat">⚡ 执行力<b id="exec">0.0</b></div>
+    <div class="stat">💪 体力<b id="health">0.0</b></div>
+  </div>
+  <div class="section-note">逾期规则：一次性任务超过 24 小时仍未完成，扣对应属性 0.5、疲劳 +1；每日任务每个 24 小时周期独立结算一次。</div>
+</section>
 
-  <section class="panel">
-    <h2>📜 任务大厅</h2>
-    <div id="tasks"></div>
-    <div class="toolbar"><button class="secondary" onclick="archiveDone()">归档已完成</button></div>
-  </section>
+<section class="panel">
+  <h2>🎯 今日进度</h2>
+  <div class="overview">
+    <div class="overview-item"><span class="muted">今日完成</span><b id="todayDone">0</b></div>
+    <div class="overview-item"><span class="muted">进行中</span><b id="activeCount">0</b></div>
+    <div class="overview-item"><span class="muted">累计漏做</span><b class="orange" id="missCount">0</b></div>
+    <div class="overview-item"><span class="muted">每日目标</span><b id="goalText">0/3</b></div>
+  </div>
+  <div class="progress"><span id="goalBar"></span></div>
+  <div class="section-note" style="margin-top:7px">达到每日目标会额外获得 +1 能力值，每天仅触发一次。</div>
+</section>
 
-  <section class="panel">
-    <h2>➕ 接取新任务</h2>
-    <div class="formgrid">
-      <div class="wide"><label class="muted">任务名称</label><input id="taskName" maxlength="40" placeholder="例如：分析3个竞品"></div>
-      <div><label class="muted">成长属性</label><select id="taskAttr"><option value="e">⚡执行力</option><option value="k">🧠认知力</option><option value="b">💼商业力</option><option value="h">💪体力</option></select></div>
-      <div><label class="muted">奖励</label><select id="taskReward"><option value="1">+1</option><option value="2" selected>+2</option><option value="3">+3</option><option value="4">+4</option><option value="5">+5</option></select></div>
-      <button onclick="addTask()">接取</button>
-    </div>
-    <div class="notice" id="notice"></div>
-  </section>
+<section class="panel">
+  <h2>📜 任务大厅</h2>
+  <div class="toolbar" id="filters">
+    <button class="secondary active" data-filter="active" onclick="setFilter('active')">进行中</button>
+    <button class="secondary" data-filter="all" onclick="setFilter('all')">全部</button>
+    <button class="secondary" data-filter="daily" onclick="setFilter('daily')">每日</button>
+    <button class="secondary" data-filter="done" onclick="setFilter('done')">已完成</button>
+    <button class="secondary" data-filter="overdue" onclick="setFilter('overdue')">逾期</button>
+  </div>
+  <div id="tasks"></div>
+  <div class="toolbar"><button class="ghost" onclick="archiveDone()">归档已完成的一次性任务</button></div>
+</section>
 
-  <section class="panel">
-    <h2>🎁 奖励商店</h2>
-    <div class="section-note">兑换只消耗“可用能力值”，等级按累计获得值计算，不会因为兑换而降级。</div>
-    <div id="rewards"></div>
-    <div class="shopgrid">
-      <div class="wide"><label class="muted">自定义奖励</label><input id="rewardName" maxlength="30" placeholder="例如：看一场电影"></div>
-      <div><label class="muted">所需能力值</label><input id="rewardCost" type="number" min="1" max="999" value="20"></div>
-      <button onclick="addReward()">添加</button>
-    </div>
-  </section>
+<section class="panel">
+  <h2>➕ 接取新任务</h2>
+  <div class="formgrid">
+    <div class="wide"><label class="muted">任务名称</label><input id="taskName" maxlength="40" placeholder="例如：分析3个竞品"></div>
+    <div><label class="muted">成长属性</label><select id="taskAttr"><option value="e">⚡执行力</option><option value="k">🧠认知力</option><option value="b">💼商业力</option><option value="h">💪体力</option></select></div>
+    <div><label class="muted">奖励</label><select id="taskReward"><option value="1">+1</option><option value="2" selected>+2</option><option value="3">+3</option><option value="4">+4</option><option value="5">+5</option></select></div>
+    <div><label class="muted">类型</label><select id="taskRepeat"><option value="once">一次性</option><option value="daily">每日重复</option></select></div>
+    <button onclick="addTask()">接取</button>
+  </div>
+  <div class="notice" id="notice"></div>
+</section>
 
-  <section class="panel">
-    <h2>🏆 成就</h2>
-    <div id="badges"></div>
-  </section>
+<div class="split">
+<section class="panel">
+  <h2>🎁 奖励商店</h2>
+  <div class="section-note">兑换只消耗可用能力值；等级按累计获得能力值计算，因此兑换不会降级。</div>
+  <div id="rewards"></div>
+  <div class="shopgrid">
+    <div class="wide"><label class="muted">自定义奖励</label><input id="rewardName" maxlength="30" placeholder="例如：看一场电影"></div>
+    <div><label class="muted">价格</label><input id="rewardCost" type="number" min="1" max="999" value="20"></div>
+    <button onclick="addReward()">添加</button>
+  </div>
+</section>
 
-  <section class="panel">
-    <h2>📖 冒险日志</h2>
-    <div id="logs"></div>
-  </section>
-  <div class="footer">数据保存在当前浏览器本地设备中</div>
+<section class="panel">
+  <h2>🏆 成就</h2>
+  <div id="badges"></div>
+</section>
+</div>
+
+<section class="panel">
+  <h2>📖 冒险日志</h2>
+  <div id="logs"></div>
+  <div class="toolbar"><button class="ghost" onclick="clearLogs()">清空日志</button></div>
+</section>
+
+<section class="panel">
+  <h2>⚙️ 设置与数据</h2>
+  <div class="settinggrid">
+    <div><label class="muted">每日完成目标（1～20）</label><input class="smallnum" id="dailyGoal" type="number" min="1" max="20" value="3"></div>
+    <button onclick="saveGoal()">保存目标</button>
+  </div>
+  <div class="toolbar" style="margin-top:14px">
+    <button class="secondary" onclick="exportData()">导出存档</button>
+    <label class="filebtn">导入存档<input id="importFile" type="file" accept="application/json" onchange="importData(event)"></label>
+  </div>
+  <div class="dangerbox"><div class="muted">危险操作</div><button class="danger" style="margin-top:8px" onclick="resetAll()">重置全部数据</button></div>
+</section>
+<div class="footer">数据保存在当前浏览器本地；建议定期导出存档备份。</div>
 </div>
 <script>
+'use strict';
 const DAY=86400000;
+const STORE='rpg6';
 const attrNames={k:'认知力',b:'商业力',e:'执行力',h:'体力'};
 const attrIcons={k:'🧠',b:'💼',e:'⚡',h:'💪'};
+const $=id=>document.getElementById(id);
+let currentFilter='active';
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function todayKey(ts=Date.now()){const x=new Date(ts);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`}
 function dayDiff(a,b){const A=new Date(a+'T00:00:00'),B=new Date(b+'T00:00:00');return Math.round((B-A)/DAY)}
-function fresh(){const now=Date.now();return{version:5,p:0,xp:0,k:0,b:0,e:0,h:0,f:0,streak:0,lastCompleteDay:'',completed:0,t:[{id:uid(),n:'阅读30分钟',r:2,a:'k',done:false,time:now,penalty:false},{id:uid(),n:'学习行业知识',r:3,a:'b',done:false,time:now,penalty:false},{id:uid(),n:'运动30分钟',r:3,a:'h',done:false,time:now,penalty:false}],rewards:[{id:uid(),n:'休息30分钟',c:10},{id:uid(),n:'娱乐时间',c:30},{id:uid(),n:'特殊奖励',c:50}],logs:[]}}
-function load(){let raw=null;try{raw=JSON.parse(localStorage.getItem('rpg5')||localStorage.getItem('rpg3')||'null')}catch(e){};let d=raw||fresh();d.version=5;['p','k','b','e','h','f'].forEach(x=>d[x]=Number(d[x])||0);d.xp=Number.isFinite(Number(d.xp))?Number(d.xp):d.p;d.completed=Number(d.completed)||((d.t||[]).filter(x=>x.done).length);d.streak=Number(d.streak)||0;d.lastCompleteDay=d.lastCompleteDay||'';d.t=Array.isArray(d.t)?d.t:[];d.t.forEach(x=>{x.id=x.id||uid();x.r=Math.min(5,Math.max(1,Number(x.r)||2));x.a=attrNames[x.a]?x.a:'e';x.time=Number(x.time)||Date.now();x.done=!!x.done;x.penalty=!!x.penalty});d.rewards=Array.isArray(d.rewards)&&d.rewards.length?d.rewards:[{id:uid(),n:'休息30分钟',c:10},{id:uid(),n:'娱乐时间',c:30},{id:uid(),n:'特殊奖励',c:50}];d.rewards.forEach(x=>{x.id=x.id||uid();x.c=Math.max(1,Number(x.c)||10)});d.logs=Array.isArray(d.logs)?d.logs.slice(0,30):[];return d}
+function fresh(){const now=Date.now();return{version:6,p:0,xp:0,k:0,b:0,e:0,h:0,f:0,streak:0,maxStreak:0,lastCompleteDay:'',completed:0,totalPenalty:0,dailyGoal:3,goalBonusDays:[],ach:{},t:[{id:uid(),n:'阅读30分钟',r:2,a:'k',repeat:'daily',done:false,time:now,penalty:false,misses:0,completedAt:null},{id:uid(),n:'学习行业知识',r:3,a:'b',repeat:'daily',done:false,time:now,penalty:false,misses:0,completedAt:null},{id:uid(),n:'运动30分钟',r:3,a:'h',repeat:'daily',done:false,time:now,penalty:false,misses:0,completedAt:null}],rewards:[{id:uid(),n:'休息30分钟',c:10},{id:uid(),n:'娱乐时间',c:30},{id:uid(),n:'特殊奖励',c:50}],logs:[]}}
+function normalize(raw){const base=fresh();const src=raw&&typeof raw==='object'?raw:{};const d={...base,...src};d.version=6;['p','k','b','e','h','f'].forEach(x=>d[x]=Math.max(0,Number(d[x])||0));d.xp=Math.max(0,Number.isFinite(Number(d.xp))?Number(d.xp):d.p);d.completed=Math.max(0,Number(d.completed)||0);d.totalPenalty=Math.max(0,Number(d.totalPenalty)||0);d.streak=Math.max(0,Number(d.streak)||0);d.maxStreak=Math.max(d.streak,Number(d.maxStreak)||0);d.lastCompleteDay=d.lastCompleteDay||'';d.dailyGoal=Math.min(20,Math.max(1,Number(d.dailyGoal)||3));d.goalBonusDays=Array.isArray(d.goalBonusDays)?d.goalBonusDays.slice(-60):[];d.ach=d.ach&&typeof d.ach==='object'?d.ach:{};d.t=Array.isArray(d.t)?d.t:[];d.t.forEach(x=>{x.id=x.id||uid();x.n=String(x.n||'未命名任务').slice(0,40);x.r=Math.min(5,Math.max(1,Number(x.r)||2));x.a=attrNames[x.a]?x.a:'e';x.repeat=x.repeat==='daily'?'daily':'once';x.time=Number(x.time)||Date.now();x.done=!!x.done;x.penalty=!!x.penalty;x.misses=Math.max(0,Number(x.misses)||0);x.completedAt=Number(x.completedAt)||null});d.rewards=Array.isArray(d.rewards)&&d.rewards.length?d.rewards:base.rewards;d.rewards.forEach(x=>{x.id=x.id||uid();x.n=String(x.n||'奖励').slice(0,30);x.c=Math.min(999,Math.max(1,Number(x.c)||10))});d.logs=Array.isArray(d.logs)?d.logs.slice(0,60):[];if(!d.completed)d.completed=d.t.filter(x=>x.done).length;return d}
+function load(){let raw=null;for(const key of [STORE,'rpg5','rpg3']){try{const text=localStorage.getItem(key);if(text){raw=JSON.parse(text);break}}catch(e){}}return normalize(raw)}
 let d=load();
-function log(msg){d.logs.unshift({t:Date.now(),m:msg});d.logs=d.logs.slice(0,30)}
-function persist(){localStorage.setItem('rpg5',JSON.stringify(d))}
-function actualReward(base){if(d.f>=10)return Math.max(1,base-2);if(d.f>=5)return Math.max(1,base-1);return base}
-function checkOverdue(){let changed=false;const now=Date.now();d.t.forEach(x=>{if(!x.done&&!x.penalty&&now-x.time>=DAY){d[x.a]=Math.max(0,Math.round((d[x.a]-.5)*10)/10);d.f+=1;x.penalty=true;log(`⏰「${x.n}」逾期：${attrNames[x.a]} -0.5，疲劳 +1`);changed=true}});if(changed)persist()}
-function updateStreak(){const today=todayKey();if(d.lastCompleteDay===today)return false;if(!d.lastCompleteDay)d.streak=1;else{const diff=dayDiff(d.lastCompleteDay,today);d.streak=diff===1?d.streak+1:1}d.lastCompleteDay=today;return true}
-function completeTask(id){checkOverdue();const x=d.t.find(v=>v.id===id);if(!x||x.done)return;const reward=actualReward(x.r);x.done=true;d.p+=reward;d.xp+=reward;d[x.a]=Math.round((d[x.a]+reward)*10)/10;d.completed+=1;const newDay=updateStreak();if(d.f>0)d.f-=1;log(`✅ 完成「${x.n}」：+${reward}能力值，${attrNames[x.a]} +${reward}${d.f>=5?'（疲劳减益）':''}`);if(newDay&&d.streak>0&&d.streak%3===0){d.p+=1;d.xp+=1;log(`🔥 连续完成 ${d.streak} 天：额外 +1 能力值`)}persist();render()}
-function addTask(){const name=document.getElementById('taskName').value.trim();if(!name){notify('请输入任务名称',true);return}const a=document.getElementById('taskAttr').value;const r=Number(document.getElementById('taskReward').value);d.t.push({id:uid(),n:name,r,a,done:false,time:Date.now(),penalty:false});log(`📜 接取任务「${name}」：24小时倒计时开始`);document.getElementById('taskName').value='';persist();notify('任务接取成功');render()}
+function persist(){localStorage.setItem(STORE,JSON.stringify(d))}
+function log(msg){d.logs.unshift({t:Date.now(),m:msg});d.logs=d.logs.slice(0,60)}
+function applyPenalty(x){d[x.a]=Math.max(0,Math.round((d[x.a]-.5)*10)/10);d.f+=1;d.totalPenalty+=1;x.misses=(x.misses||0)+1;x.penalty=true;log(`⏰「${x.n}」漏做：${attrNames[x.a]} -0.5，疲劳 +1`)}
+function runMaintenance(){let changed=false;const now=Date.now();for(const x of d.t){if(x.repeat==='daily'){let guard=0;while(now-x.time>=DAY&&guard<365){if(!x.done&&!x.penalty)applyPenalty(x);x.time+=DAY;x.done=false;x.penalty=false;x.completedAt=null;guard++;changed=true}}else if(!x.done&&!x.penalty&&now-x.time>=DAY){applyPenalty(x);changed=true}}if(unlockAchievements())changed=true;if(changed)persist()}
+function rewardPenalty(){return d.f>=10?2:d.f>=5?1:0}
+function actualReward(base){return Math.max(1,base-rewardPenalty())}
+function updateStreak(){const today=todayKey();if(d.lastCompleteDay===today)return false;if(!d.lastCompleteDay)d.streak=1;else{const diff=dayDiff(d.lastCompleteDay,today);d.streak=diff===1?d.streak+1:1}d.lastCompleteDay=today;d.maxStreak=Math.max(d.maxStreak,d.streak);return true}
+function countTodayCompleted(){const today=todayKey();return d.t.filter(x=>x.completedAt&&todayKey(x.completedAt)===today).length}
+function maybeDailyGoalBonus(){const today=todayKey();if(countTodayCompleted()>=d.dailyGoal&&!d.goalBonusDays.includes(today)){d.goalBonusDays.push(today);d.goalBonusDays=d.goalBonusDays.slice(-60);d.p+=1;d.xp+=1;log(`🎯 达成今日 ${d.dailyGoal} 个任务目标：额外 +1 能力值`);return true}return false}
+function completeTask(id){runMaintenance();const x=d.t.find(v=>v.id===id);if(!x||x.done)return;const cut=rewardPenalty();const reward=actualReward(x.r);x.done=true;x.completedAt=Date.now();d.p+=reward;d.xp+=reward;d[x.a]=Math.round((d[x.a]+reward)*10)/10;d.completed+=1;const newDay=updateStreak();if(d.f>0)d.f-=1;log(`✅ 完成「${x.n}」：+${reward}能力值，${attrNames[x.a]} +${reward}${cut?`（疲劳减益 -${cut}）`:''}`);if(newDay&&d.streak>0&&d.streak%3===0){d.p+=1;d.xp+=1;log(`🔥 连续完成 ${d.streak} 天：额外 +1 能力值`)}maybeDailyGoalBonus();unlockAchievements();persist();render()}
+function addTask(){const name=$('taskName').value.trim();if(!name){notify('请输入任务名称',true);return}const a=$('taskAttr').value;const r=Number($('taskReward').value);const repeat=$('taskRepeat').value==='daily'?'daily':'once';d.t.push({id:uid(),n:name,r,a,repeat,done:false,time:Date.now(),penalty:false,misses:0,completedAt:null});log(`📜 接取${repeat==='daily'?'每日':'一次性'}任务「${name}」：24小时计时开始`);$('taskName').value='';persist();notify('任务接取成功');render()}
 function deleteTask(id){const x=d.t.find(v=>v.id===id);if(!x)return;if(!confirm(`确认删除任务「${x.n}」？`))return;d.t=d.t.filter(v=>v.id!==id);log(`🗑️ 删除任务「${x.n}」`);persist();render()}
-function archiveDone(){const n=d.t.filter(x=>x.done).length;if(!n){notify('暂无已完成任务');return}d.t=d.t.filter(x=>!x.done);log(`📦 归档 ${n} 个已完成任务`);persist();render()}
-function addReward(){const name=document.getElementById('rewardName').value.trim();const cost=Math.floor(Number(document.getElementById('rewardCost').value));if(!name||!Number.isFinite(cost)||cost<1){notify('请填写有效的奖励名称和能力值',true);return}d.rewards.push({id:uid(),n:name,c:cost});document.getElementById('rewardName').value='';persist();notify('奖励已加入商店');render()}
-function buyReward(id){const x=d.rewards.find(v=>v.id===id);if(!x)return;if(d.p<x.c){notify(`能力值不足，还差 ${x.c-d.p}`,true);return}if(!confirm(`消耗 ${x.c} 能力值兑换「${x.n}」？`))return;d.p-=x.c;log(`🎁 兑换「${x.n}」：-${x.c}能力值`);persist();notify('兑换成功');render()}
-function deleteReward(id){d.rewards=d.rewards.filter(x=>x.id!==id);persist();render()}
-function remaining(x){if(x.done)return '已完成';const ms=DAY-(Date.now()-x.time);if(ms<=0)return x.penalty?'已逾期 · 已惩罚':'已逾期';const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000);return `剩余 ${h}小时${m}分`}
-function stateText(){if(d.f>=10)return '状态：🔻 低效状态 · 任务奖励 -2';if(d.f>=5)return '状态：😵 疲劳状态 · 任务奖励 -1';if(d.streak>=7)return '状态：🔥 自律者';if(d.streak>=3)return '状态：⚡ 连胜中';return '状态：🌱 稳定成长'}
-function achievements(){return[{name:'初次行动',ok:d.completed>=1},{name:'行动者·10',ok:d.completed>=10},{name:'自律3日',ok:d.streak>=3},{name:'自律7日',ok:d.streak>=7},{name:'累计50能力',ok:d.xp>=50},{name:'累计100能力',ok:d.xp>=100}]}
-function notify(msg,bad=false){const n=document.getElementById('notice');n.textContent=msg;n.style.color=bad?'var(--red)':'var(--green)';clearTimeout(notify.t);notify.t=setTimeout(()=>n.textContent='',2600)}
-function render(){checkOverdue();document.getElementById('power').textContent=d.p;document.getElementById('level').textContent='Lv.'+(Math.floor(d.xp/50)+1);document.getElementById('streak').textContent=d.streak+'天';document.getElementById('fatigue').textContent=d.f;document.getElementById('state').textContent=stateText();document.getElementById('know').textContent=d.k.toFixed(1);document.getElementById('biz').textContent=d.b.toFixed(1);document.getElementById('exec').textContent=d.e.toFixed(1);document.getElementById('health').textContent=d.h.toFixed(1);
- const taskBox=document.getElementById('tasks');taskBox.innerHTML='';if(!d.t.length)taskBox.innerHTML='<div class="empty">暂无任务，去接取一个新的成长任务吧。</div>';d.t.forEach(x=>{const overdue=!x.done&&Date.now()-x.time>=DAY;const div=document.createElement('div');div.className='task'+(x.done?' done':'')+(overdue?' overdue':'');div.innerHTML=`<div><div class="task-title">${attrIcons[x.a]} ${escapeHtml(x.n)}</div><div class="task-meta">奖励 +${x.r} · ${attrNames[x.a]} · ${remaining(x)}${x.penalty?' · ⚠️已触发逾期惩罚':''}</div></div><div class="actions"><button ${x.done?'disabled':''} onclick="completeTask('${x.id}')">${x.done?'已完成':'完成'}</button><button class="danger" onclick="deleteTask('${x.id}')">删除</button></div>`;taskBox.appendChild(div)});
- const rewardBox=document.getElementById('rewards');rewardBox.innerHTML='';d.rewards.forEach(x=>{const row=document.createElement('div');row.className='reward';row.innerHTML=`<div><b>${escapeHtml(x.n)}</b><div class="muted">需要 ${x.c} 能力值</div></div><div class="actions"><button onclick="buyReward('${x.id}')">兑换</button><button class="secondary" onclick="deleteReward('${x.id}')">移除</button></div>`;rewardBox.appendChild(row)});
- const badgeBox=document.getElementById('badges');badgeBox.innerHTML=achievements().map(x=>`<span class="badge ${x.ok?'':'locked'}">${x.ok?'🏆':'🔒'} ${x.name}</span>`).join('');
- const logBox=document.getElementById('logs');logBox.innerHTML=d.logs.length?d.logs.slice(0,12).map(x=>`<div class="log">${new Date(x.t).toLocaleString()} · ${escapeHtml(x.m)}</div>`).join(''):'<div class="empty">暂无冒险记录</div>';
- persist()}
-function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-render();setInterval(render,60000);
+function archiveDone(){const list=d.t.filter(x=>x.done&&x.repeat==='once');if(!list.length){notify('暂无可归档的一次性任务');return}d.t=d.t.filter(x=>!(x.done&&x.repeat==='once'));log(`📦 归档 ${list.length} 个已完成的一次性任务`);persist();render()}
+function setFilter(v){currentFilter=v;renderTasks()}
+function addReward(){const name=$('rewardName').value.trim();const cost=Math.floor(Number($('rewardCost').value));if(!name||!Number.isFinite(cost)||cost<1||cost>999){notify('请填写有效的奖励名称和 1～999 的价格',true);return}d.rewards.push({id:uid(),n:name,c:cost});$('rewardName').value='';persist();notify('奖励已加入商店');renderRewards()}
+function buyReward(id){const x=d.rewards.find(v=>v.id===id);if(!x)return;if(d.p<x.c){notify(`能力值不足，还差 ${Math.ceil((x.c-d.p)*10)/10}`,true);return}if(!confirm(`消耗 ${x.c} 能力值兑换「${x.n}」？`))return;d.p=Math.round((d.p-x.c)*10)/10;log(`🎁 兑换「${x.n}」：-${x.c}能力值`);persist();notify('兑换成功');render()}
+function deleteReward(id){d.rewards=d.rewards.filter(x=>x.id!==id);persist();renderRewards()}
+function formatDuration(ms){if(ms<=0)return '0分钟';const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000);return h>0?`${h}小时${m}分`:`${Math.max(1,m)}分钟`}
+function taskTimeText(x){const next=x.time+DAY;if(x.done&&x.repeat==='daily')return `本周期已完成 · ${formatDuration(next-Date.now())}后刷新`;if(x.done)return '已完成';if(x.repeat==='once'&&x.penalty)return '已逾期 · 已执行惩罚';return `剩余 ${formatDuration(next-Date.now())}`}
+function taskIsOverdue(x){return x.repeat==='once'&&!x.done&&x.penalty}
+function taskVisible(x){if(currentFilter==='all')return true;if(currentFilter==='active')return !x.done;if(currentFilter==='daily')return x.repeat==='daily';if(currentFilter==='done')return x.done;if(currentFilter==='overdue')return taskIsOverdue(x);return true}
+function renderTasks(){runMaintenance();document.querySelectorAll('#filters [data-filter]').forEach(b=>b.classList.toggle('active',b.dataset.filter===currentFilter));const list=d.t.filter(taskVisible).slice().sort((a,b)=>{if(a.done!==b.done)return a.done?1:-1;if(taskIsOverdue(a)!==taskIsOverdue(b))return taskIsOverdue(a)?-1:1;return (a.time+DAY)-(b.time+DAY)});$('tasks').innerHTML=list.length?list.map(x=>`<div class="task ${x.done?'done':''} ${taskIsOverdue(x)?'overdue':''} ${x.repeat==='daily'?'daily':''}"><div><div class="task-title">${esc(x.n)}</div><div class="task-meta"><span class="pill">${attrIcons[x.a]} ${attrNames[x.a]}</span><span class="pill">+${x.r} 能力值</span><span class="pill">${x.repeat==='daily'?'🔁 每日':'📌 一次性'}</span>${x.misses?`<span class="pill warn">漏做 ${x.misses} 次</span>`:''}<br>${taskTimeText(x)}</div></div><div class="actions"><button onclick="completeTask('${x.id}')" ${x.done?'disabled':''}>${x.done?'已完成':'完成'}</button><button class="danger" onclick="deleteTask('${x.id}')">删除</button></div></div>`).join(''):'<div class="empty">这里暂时没有任务。</div>'}
+function renderRewards(){$('rewards').innerHTML=d.rewards.length?d.rewards.map(x=>`<div class="reward"><div><b>${esc(x.n)}</b><div class="muted">需要 ${x.c} 能力值</div></div><div class="actions"><button onclick="buyReward('${x.id}')">兑换</button><button class="danger" onclick="deleteReward('${x.id}')">删除</button></div></div>`).join(''):'<div class="empty">奖励商店为空。</div>'}
+const achievementDefs=[['first','🌱 初次行动',()=>d.completed>=1],['ten','⚔️ 任务达人',()=>d.completed>=10],['fifty','🛡️ 百炼成钢',()=>d.completed>=50],['streak3','🔥 连胜3天',()=>d.maxStreak>=3],['streak7','🏆 连胜7天',()=>d.maxStreak>=7],['xp50','✨ 累计50能力',()=>d.xp>=50],['xp100','👑 累计100能力',()=>d.xp>=100],['balance10','💠 四维均衡',()=>Math.min(d.k,d.b,d.e,d.h)>=10]];
+function unlockAchievements(){let changed=false;for(const [id,label,ok] of achievementDefs){if(!d.ach[id]&&ok()){d.ach[id]=Date.now();log(`🏆 解锁成就：${label}`);changed=true}}return changed}
+function renderBadges(){$('badges').innerHTML=achievementDefs.map(([id,label])=>`<span class="badge ${d.ach[id]?'':'locked'}">${label}${d.ach[id]?' ✓':''}</span>`).join('')}
+function renderLogs(){$('logs').innerHTML=d.logs.length?d.logs.slice(0,30).map(x=>`<div class="log">${new Date(x.t).toLocaleString()} · ${esc(x.m)}</div>`).join(''):'<div class="empty">暂无冒险日志。</div>'}
+function clearLogs(){if(!d.logs.length)return;if(!confirm('确认清空冒险日志？'))return;d.logs=[];persist();renderLogs()}
+function notify(text,bad=false){const el=$('notice');el.textContent=text;el.style.color=bad?'var(--red)':'var(--green)';clearTimeout(notify.timer);notify.timer=setTimeout(()=>el.textContent='',2600)}
+function saveGoal(){const n=Math.floor(Number($('dailyGoal').value));if(!Number.isFinite(n)||n<1||n>20){notify('每日目标需为 1～20',true);return}d.dailyGoal=n;maybeDailyGoalBonus();persist();notify('每日目标已保存');render()}
+function exportData(){persist();const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`冒险者成长系统-${todayKey()}.json`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},0)}
+function importData(event){const file=event.target.files&&event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const parsed=JSON.parse(String(reader.result));if(!parsed||typeof parsed!=='object')throw new Error('bad');if(!confirm('导入会覆盖当前浏览器中的游戏数据，确认继续？'))return;d=normalize(parsed);log('📥 已导入存档');persist();render();notify('存档导入成功')}catch(e){notify('存档文件无效',true)}finally{event.target.value=''}};reader.readAsText(file)}
+function resetAll(){if(!confirm('确认重置全部数据？任务、属性、能力值和日志都会清空。'))return;if(!confirm('再次确认：此操作不可撤销，是否继续？'))return;d=fresh();persist();currentFilter='active';render();notify('已重置全部数据')}
+function render(){runMaintenance();unlockAchievements();persist();$('power').textContent=d.p.toFixed(d.p%1?1:0);const lv=Math.floor(d.xp/50)+1;const inLevel=d.xp%50;$('level').textContent=`Lv.${lv}`;$('streak').textContent=`${d.streak}天`;$('fatigue').textContent=d.f;$('know').textContent=d.k.toFixed(1);$('biz').textContent=d.b.toFixed(1);$('exec').textContent=d.e.toFixed(1);$('health').textContent=d.h.toFixed(1);$('levelBar').style.width=`${inLevel/50*100}%`;$('levelHint').textContent=`累计 ${d.xp} 能力值 · 距 Lv.${lv+1} 还需 ${50-inLevel}`;let state='状态：精力充沛';if(d.f>=10)state='状态：🥀 虚弱（任务奖励 -2）';else if(d.f>=5)state='状态：😵 疲惫（任务奖励 -1）';else if(d.streak>=7)state='状态：🔥 高度自律';else if(d.streak>=3)state='状态：⚡ 渐入佳境';$('state').textContent=state;const td=countTodayCompleted();$('todayDone').textContent=td;$('activeCount').textContent=d.t.filter(x=>!x.done).length;$('missCount').textContent=d.totalPenalty;$('goalText').textContent=`${td}/${d.dailyGoal}`;$('goalBar').style.width=`${Math.min(100,td/d.dailyGoal*100)}%`;$('dailyGoal').value=d.dailyGoal;renderTasks();renderRewards();renderBadges();renderLogs()}
+$('taskName').addEventListener('keydown',e=>{if(e.key==='Enter')addTask()});
+window.addEventListener('storage',e=>{if(e.key===STORE){d=load();render()}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)render()});
+render();
+setInterval(render,60000);
 </script>
 </body>
 </html>

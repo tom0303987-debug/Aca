@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#151122">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https:; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <title>同行成长 · 开发验证版</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./app.css">
+  <script src="./config.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+<div class="ambient" aria-hidden="true"></div>
+<main class="shell">
+  <header class="brand"><a class="brand-lockup" href="./"><img src="./icon.svg" alt="" width="40" height="40"><span>同行成长<small>GROW TOGETHER</small></span></a><span class="dev-badge">开发验证版</span></header>
+  <p class="notice-banner">只连接你启动的开发服务 · 不属于线上 V12 · 请使用测试账号</p>
+  <div id="feedback" class="feedback hidden" role="status" aria-live="polite"></div>
+
+  <section id="auth-view" class="auth-layout">
+    <div class="intro">
+      <p class="eyebrow">一点坚持，一起看见</p>
+      <h1>让进步，<br>有同行的人。</h1>
+      <p class="intro-copy">不用和全世界比较。和几位朋友一起，把今天的一小步，变成持续的成长。</p>
+      <div class="principles"><span>01　邀请制小组</span><span>02　每周重新出发</span><span>03　隐私由你决定</span></div>
+      <div class="sample-card"><span class="spark">✦</span><div><strong>今天完成一点，就值得鼓励</strong><p>签到 +1 · 统一行动各 +2 · 每日上限 7 分</p></div></div>
+    </div>
+    <div class="card auth-card">
+      <div class="segmented" role="group" aria-label="登录或注册"><button id="login-tab" class="selected" type="button">登录</button><button id="register-tab" type="button">注册测试账号</button></div>
+      <h2 id="auth-heading">欢迎回来</h2>
+      <p class="muted" id="auth-description">你的成长，不需要从头开始。</p>
+      <form id="auth-form">
+        <label for="username">用户名</label><input id="username" name="username" autocomplete="username" pattern="[A-Za-z0-9_]{3,24}" minlength="3" maxlength="24" required placeholder="3～24 位英文、数字或下划线">
+        <div id="nickname-field" class="hidden"><label for="nickname">小组内昵称</label><input id="nickname" name="nickname" maxlength="20" placeholder="朋友看到的名字"></div>
+        <label for="password">密码</label><input id="password" name="password" type="password" autocomplete="current-password" minlength="12" maxlength="128" required placeholder="至少 12 位，请勿使用常用密码">
+        <label id="consent-field" class="checkbox hidden"><input id="auth-consent" type="checkbox"><span>我已阅读<a href="./privacy.html" target="_blank" rel="noopener">开发验证说明</a>，同意使用测试数据验证账号功能。</span></label>
+        <button class="primary full" id="auth-submit" type="submit">登录并继续 <span aria-hidden="true">→</span></button>
+      </form>
+      <p class="fine">无短信费用，不采集手机号。此版不提供找回密码；刷新后需重新登录。尚无线上服务和商店安装包。</p>
+    </div>
+  </section>
+
+  <section id="app-view" class="hidden">
+    <div class="welcome"><div><p class="eyebrow" id="today-label">北京时间</p><h1 id="greeting">今天，也向前一点。</h1></div><button id="refresh" class="quiet" type="button">刷新数据 ↻</button></div>
+    <p id="sync-status" class="muted" aria-live="polite"></p>
+    <nav class="bottom-nav" aria-label="主要导航"><button data-page="today" class="selected" type="button"><span>☀</span>今日</button><button data-page="group" type="button"><span>◈</span>小组</button><button data-page="board" type="button"><span>↗</span>榜单</button><button data-page="account" type="button"><span>◎</span>我的</button></nav>
+
+    <section data-panel="today">
+      <div class="dashboard-grid">
+        <article class="card checkin-card"><p class="eyebrow">DAILY CHECK-IN</p><h2>到场，就是一个好开始。</h2><p class="muted">签到只代表今天来过，行动让成长更具体。</p><div class="checkin-row"><div><strong id="streak">0</strong><span>天连续签到</span></div><button id="checkin" class="primary" type="button">今日签到 +1</button></div><p class="fine">北京时间 00:00 开启新一天，漏签不扣分。</p></article>
+        <article class="card points-card"><p class="eyebrow">MY PROGRESS</p><div class="points"><strong id="today-points">0</strong><span>/ 7 今日积分</span></div><progress id="daily-progress" max="7" value="0" aria-label="今日积分进度"></progress><div class="stat-line"><span>本周累计</span><b id="week-points">0 分</b></div><p class="fine">积分是行动记录，不代表个人价值。</p></article>
+      </div>
+      <div class="section-heading"><div><h2>今天的三个小行动</h2><p class="muted">每项每天一次，按实际完成情况确认。</p></div><span class="pill">统一计分</span></div>
+      <div id="actions" class="action-grid"></div>
+      <div class="card soft"><strong>个人成长和小组竞争，各有空间。</strong><p class="muted">原 V12 的自定义任务、能力值、奖励和收支保持独立，不上传为排行榜积分。此开发版尚未迁移或同步你的旧存档。</p></div>
+    </section>
+
+    <section data-panel="group" class="hidden">
+      <div class="section-heading"><div><h2>我的同行小组</h2><p class="muted">每组最多 30 人，只向组员分享参榜数据。</p></div></div>
+      <div id="group-list" class="group-list"></div>
+      <div class="two-columns">
+        <form id="create-group" class="card"><h3>建立一个小组</h3><label for="group-name">小组名称</label><input id="group-name" minlength="2" maxlength="24" required placeholder="例如：每天前进一点点"><label class="checkbox"><input id="create-consent" type="checkbox" required><span>同意向加入的成员展示昵称、签到与行动统计，以及本周和上周同期积分；不含任何收支。</span></label><button class="primary" type="submit">创建小组</button></form>
+        <form id="join-group" class="card"><h3>与朋友会合</h3><label for="invite-code">朋友发来的邀请码</label><input id="invite-code" maxlength="60" required autocomplete="off" placeholder="粘贴邀请码"><button class="secondary" type="submit">先查看小组</button><div id="join-preview" class="hidden"><p id="join-name"></p><label class="checkbox"><input id="join-consent" type="checkbox"><span>同意加入，并分享昵称、签到、行动统计和本周／上周同期积分。可随时退出排名。</span></label><button id="join-confirm" class="primary" type="button">确认加入</button></div></form>
+      </div>
+      <div id="invite-result" class="card hidden"><h3>邀请一位朋友</h3><p class="muted">24 小时内有效，仅可使用一次。重新生成会使旧码失效。</p><label for="created-code">邀请码（只向想邀请的人发送）</label><input id="created-code" readonly><div class="row"><button id="copy-invite" class="secondary" type="button">复制邀请码</button><button id="revoke-invite" class="quiet" type="button">撤销邀请码</button></div></div>
+      <section id="manage-group" class="card hidden"><h3>成员管理</h3><p class="muted">转让组长前请确认对象。移除成员后，对方将无法再读取本组榜单。</p><div id="member-list"></div></section>
+    </section>
+
+    <section data-panel="board" class="hidden">
+      <div class="section-heading"><div><h2>同路，不同速</h2><p class="muted">每周一重新开始；同分同名次。</p></div></div>
+      <div class="board-controls card"><div><label for="board-group">选择小组</label><select id="board-group"></select></div><div><label for="board-kind">查看榜单</label><select id="board-kind"><option value="points">本周行动榜</option><option value="checkinDays">本周坚持榜</option><option value="improvement">个人进步榜</option></select></div></div>
+      <p id="board-period" class="muted"></p><div id="leaderboard" class="card leaderboard"><p class="empty">先创建或加入一个小组，再看看彼此的成长。</p></div>
+      <div class="card soft"><strong>看见努力，不制造压力。</strong><p class="muted">行动由本人确认。服务端只防止重复计分，不能证明实际完成。进步值对比上周同期，不展示全平台排名，也不排名收入。</p></div>
+    </section>
+
+    <section data-panel="account" class="hidden">
+      <div class="card"><h2>我的账号</h2><p id="account-info"></p><p class="muted">密码经加盐哈希保存。登录令牌仅保存在当前页面内存，不写入浏览器存储。组长也无法查看你的密码。</p><div class="row"><button id="export-account" class="secondary" type="button">导出我的数据</button><button id="logout" class="quiet" type="button">退出登录</button><a href="./privacy.html" target="_blank" rel="noopener">开发验证说明 ↗</a></div></div>
+      <form id="password-form" class="card"><h3>修改密码</h3><label for="current-password">当前密码</label><input id="current-password" type="password" autocomplete="current-password" required maxlength="128"><label for="new-password">新密码（至少 12 位）</label><input id="new-password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required><button class="secondary" type="submit">修改并退出所有设备</button></form>
+      <form id="delete-form" class="card danger-zone"><h3>删除开发账号</h3><p class="muted">永久删除本账号、服务端签到与行动记录；仍有其他成员的小组须先转让组长。不会删除独立的线上 V12 本地存档。</p><label for="delete-password">输入当前密码确认身份</label><input id="delete-password" type="password" autocomplete="current-password" required maxlength="128"><label class="checkbox"><input id="delete-confirm" type="checkbox" required><span>我理解删除不可恢复，已导出需要保留的数据。</span></label><button class="danger" type="submit">永久删除此开发账号</button></form>
+    </section>
+  </section>
+  <footer>同行成长 · 让坚持被看见，也让休息被尊重。<br>本地开发验证 · 未部署云端 · 未上架应用商店</footer>
+</main>
+</body>
+</html>

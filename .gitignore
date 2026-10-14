@@ -1,0 +1,10 @@
+mobile/data/
+mobile/dist/
+mobile/node_modules/
+mobile/android/
+mobile/ios/
+mobile/.env
+*.keystore
+*.jks
+*.p12
+*.mobileprovision

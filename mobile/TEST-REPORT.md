@@ -10,7 +10,11 @@
 - V12 签到回归测试 1 组通过。
 - 网页资源构建通过；Android 工程生成和资源同步通过。
 - 提供 Windows x64 / ARM64 专用 Node.js 24.21.0 下载、SHA-256 校验、自动测试入口。校验值来源：<https://nodejs.org/download/release/v24.21.0/SHASUMS256.txt>。
-- 增加 GitHub Actions Windows/Linux 检查，仅在开发分支执行，不部署网站。远程实际结果以工作流记录为准。
+- GitHub Actions Windows Server 2025 x64 / Ubuntu 两个任务均成功；Node.js 24.21.0。Windows 实际执行了官方运行环境下载、哈希校验、安装、7 组应用测试、1 组 V12 回归、构建及 Android 工程生成。
+- Windows 启动脚本已在含空格的临时目录中执行，成功启动服务并创建隔离数据库；测试结束后清理进程和测试目录。
+- 可核对记录：<https://github.com/tom0303987-debug/Aca/actions/runs/38558191864>。被测试代码提交：`3218df44fb8e91ad5dfe8237efa6e13ca6c07726`。后续交付提交只补充说明文档。
+- Windows ARM64 下载入口与官方哈希已准备，但未在 ARM64 设备执行。
+- Windows x64 完整包附带官方 Node.js 原始运行环境和许可文件，可离线校验及运行本地测试；不包含数据库、测试账号或 native npm 依赖。
 
 ## 如何重跑
 

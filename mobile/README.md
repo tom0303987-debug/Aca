@@ -15,7 +15,7 @@
 
 ## Windows 最快启动
 
-1. 解压开发包，进入 `mobile` 文件夹，双击 **`INSTALL-AND-TEST-WINDOWS.cmd`**。脚本从 Node.js 官方站点下载 Node.js 24.21.0，校验固定 SHA-256，并安装到本目录的 `.runtime`；支持 Windows x64/ARM64，不修改系统 PATH，不需要管理员权限。首次需要联网下载约 38 MB。
+1. 解压开发包，进入 `mobile` 文件夹，双击 **`INSTALL-AND-TEST-WINDOWS.cmd`**。脚本从 Node.js 官方站点下载 Node.js 24.21.0，校验固定 SHA-256，并安装到本目录的 `.runtime`；支持 Windows x64/ARM64，不修改系统 PATH，不需要管理员权限。Windows 64 位完整包已附带运行环境，解压后可离线校验和测试；纯源码包或 ARM64 电脑首次需要联网下载约 38 MB。
 2. 等待自动测试通过，再双击 **`START-WINDOWS.cmd`**。已经安装 Node.js 24 的用户也可以直接启动。
 3. 等控制台显示启动成功，在浏览器打开 **http://127.0.0.1:8787**。
 4. 保持命令窗口打开；测试完成按 `Ctrl+C` 停止。

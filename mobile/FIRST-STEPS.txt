@@ -1,0 +1,14 @@
+﻿同行成长 · 本地开发验证版
+
+1. 先解压整个压缩包，不要直接在压缩包里运行。
+2. 进入 mobile 文件夹，双击 INSTALL-AND-TEST-WINDOWS.cmd。
+3. 看到 Overall: PASS 后，双击 START-WINDOWS.cmd。
+4. 浏览器打开 http://127.0.0.1:8787，保持命令窗口打开。
+5. 使用两个独立浏览器窗口注册两个测试账号，按 README.md 验证小组和排行榜。
+
+Windows x64 完整包包含官方 Node.js 24.21.0，无需另装数据库或 npm 依赖即可测试。
+完整包的运行环境在 .runtime 文件夹，请随源码一同解压。
+脚本不会修改系统 PATH。退出应用按 Ctrl+C。
+服务只在这台电脑上运行，手机不能通过此 localhost 地址访问。
+测试报告在 test-results/latest.txt；数据库在 data/club.sqlite。
+开发版不是 APK/IPA，也没有远程联机服务。详细范围见 TEST-REPORT.md。

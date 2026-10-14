@@ -8,3 +8,5 @@ mobile/.env
 *.jks
 *.p12
 *.mobileprovision
+mobile/.runtime/
+mobile/test-results/

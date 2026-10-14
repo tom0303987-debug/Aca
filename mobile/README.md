@@ -15,12 +15,14 @@
 
 ## Windows 最快启动
 
-1. 从 [Node.js 官方网站](https://nodejs.org/) 安装 **Node.js 24**。这是本地运行环境，不是云服务订阅。
-2. 解压开发包，进入 `mobile` 文件夹，双击 `START-WINDOWS.cmd`。
+1. 解压开发包，进入 `mobile` 文件夹，双击 **`INSTALL-AND-TEST-WINDOWS.cmd`**。脚本从 Node.js 官方站点下载 Node.js 24.21.0，校验固定 SHA-256，并安装到本目录的 `.runtime`；支持 Windows x64/ARM64，不修改系统 PATH，不需要管理员权限。首次需要联网下载约 38 MB。
+2. 等待自动测试通过，再双击 **`START-WINDOWS.cmd`**。已经安装 Node.js 24 的用户也可以直接启动。
 3. 等控制台显示启动成功，在浏览器打开 **http://127.0.0.1:8787**。
 4. 保持命令窗口打开；测试完成按 `Ctrl+C` 停止。
 
-Windows 启动脚本尚未在 Windows 真机执行；后端与测试已在 Node.js 24.19.0／Linux 上执行。
+安装完成后会自动检测 SQLite、运行功能测试和构建网页资源，结果写入 `test-results/latest.txt` 和 `latest.json`。失败会返回非零退出码，不会显示测试成功。删除 `.runtime` 可移除本项目专用运行环境，不影响用户数据库。
+
+这不等于远程安装到你的电脑。已执行和未执行的项目见 [TEST-REPORT.md](TEST-REPORT.md)。若单位策略限制 PowerShell 或官方下载不可达，不要关闭安全设置；可由管理员安装官方 Node.js 24 后运行下方命令。
 
 命令行方式（Windows/macOS/Linux 通用）在 `mobile` 目录运行：
 
@@ -28,7 +30,7 @@ Windows 启动脚本尚未在 Windows 真机执行；后端与测试已在 Node.
 node server/main.mjs
 ```
 
-**本地启动和测试不需要 `npm install`。** `package.json` 中的 Capacitor 依赖只用于后续生成原生工程，本次未安装、未生成 Android/iOS 工程。
+**本地启动和测试不需要 `npm install`。** `package.json` 中的 Capacitor 依赖只用于后续生成原生工程，本轮已安装并锁定 Capacitor 8.5.3，且已在 Linux 生成与同步 Android 工程；未编译 APK，也未验证 iOS。
 
 如端口被占用，可设置 `ACA_DEV_PORT` 后启动（例如 PowerShell：`$env:ACA_DEV_PORT=8788`）。此服务仅绑定 `127.0.0.1`，不向互联网开放。手机不能通过这里的 localhost 访问电脑。
 
@@ -57,8 +59,7 @@ node server/main.mjs
 在 `mobile` 目录运行：
 
 ```sh
-node --test tests/*.test.mjs
-node scripts/build.mjs
+node scripts/verify.mjs
 ```
 
 测试覆盖日期跨日／跨周、账号注册登录、持久化重启、密码与令牌不明文落库、8 次并发重复签到、客户端伪造积分和用户 ID、陌生人越权、普通成员越权、邀请使用／失效／撤销、同分同名次、退出参榜、组长转让、成员移除、改密撤销会话、账号删除、请求限流、跨源拒绝和静态文件隔离。
@@ -73,15 +74,16 @@ node scripts/build.mjs
 
 `node scripts/build.mjs` 输出 `dist`。不提供 API 地址时，原生运行会明确提示尚未配置后端，不伪装成功联网。
 
-后续在有网络和平台工具的电脑上，才进行以下步骤：
+本轮 Android 工程生成和资源同步已通过。源码包不包含可重新生成的 `node_modules`、`dist`、`android`。在另一台电脑恢复依赖并生成相应工程：
 
 ```sh
-npm install
+npm ci --ignore-scripts --no-audit --no-fund
 npm run native:android
+# 以下步骤只在具备 Xcode 的 macOS 上执行
 npm run native:ios
 ```
 
-按需生成对应平台即可；再次更新资源使用 `npm run native:sync`。本地网页/API 运行不依赖这些安装步骤。
+按需生成对应平台即可；再次更新资源使用 `npm run native:sync`。本地网页/API 运行不依赖这些安装步骤。依赖版本与完整性校验记录在 `package-lock.json`；请使用 `npm ci` 复现。
 
 **不能直接用现有本机服务做原生发布。** 后续需要部署 HTTPS 后端，配置受控来源、原生会话存储、证书与生命周期，再通过 `ACA_API_BASE` 给构建脚本传入明确的 HTTPS origin。当前 HTTP 服务故意拒绝非本机 Host 和跨源请求；单填一个网址不会解除这些限制，也不会自动创建云服务。
 

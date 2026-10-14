@@ -1,0 +1,47 @@
+name: Mobile development validation
+on:
+  push:
+    branches: [dev/mobile-validation-v1]
+    paths: ['mobile/**', '.github/workflows/mobile-validation.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  local-app:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.21.0'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - name: Install locked native dependencies
+        working-directory: mobile
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Windows portable installer and automated tests
+        if: runner.os == 'Windows'
+        shell: cmd
+        working-directory: mobile
+        env:
+          ACA_NONINTERACTIVE: '1'
+        run: INSTALL-AND-TEST-WINDOWS.cmd
+      - name: Linux automated tests
+        if: runner.os == 'Linux'
+        working-directory: mobile
+        run: npm run verify
+      - name: Generate Android project and sync assets
+        working-directory: mobile
+        run: npm run native:android
+      - name: Save test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-test-report-${{ runner.os }}
+          path: mobile/test-results/
+          retention-days: 7

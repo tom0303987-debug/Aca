@@ -13,6 +13,7 @@ const vector=`<vector xmlns:android="http://schemas.android.com/apk/res/android"
 if(platform==='android'){
   const java='android/app/src/main/java/cn/okekxf/growth';mkdirSync(join(root,java),{recursive:true});
   for(const name of ['MainActivity.java','NativeSessionPlugin.java'])copyFileSync(join(root,'native/android',name),join(root,java,name));
+  const testDir='android/app/src/androidTest/java/cn/okekxf/growth';mkdirSync(join(root,testDir),{recursive:true});copyFileSync(join(root,'native/android/NativeSmokeTest.java'),join(root,testDir,'NativeSmokeTest.java'));
   let gradle=read('android/app/build.gradle').replace(/versionCode \d+/,'versionCode 20001').replace(/versionName "[^"]+"/,'versionName "2.0.1"');
   if(!gradle.includes('applicationIdSuffix'))gradle=gradle.replace('buildTypes {','buildTypes {\n        debug { applicationIdSuffix ".dev"; versionNameSuffix "-test" }');
   write('android/app/build.gradle',gradle);

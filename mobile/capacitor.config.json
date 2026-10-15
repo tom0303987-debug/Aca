@@ -2,5 +2,12 @@
   "appId": "cn.okekxf.growth",
   "appName": "Upup有目标",
   "webDir": "dist",
-  "backgroundColor": "#DCE2F1"
+  "backgroundColor": "#DCE2F1",
+  "plugins": {
+    "SystemBars": {
+      "style": "LIGHT",
+      "insetsHandling": "native",
+      "initialViewportFitValueHint": "cover"
+    }
+  }
 }

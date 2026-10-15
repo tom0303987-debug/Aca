@@ -25,6 +25,9 @@ jobs:
           distribution: temurin
           java-version: '21'
       - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools platforms;android-36 build-tools;36.0.0
+          log-accepted-android-sdk-licenses: false
       - uses: gradle/actions/setup-gradle@v4
       - run: npm ci --ignore-scripts --no-audit --no-fund
         working-directory: mobile
@@ -44,6 +47,23 @@ jobs:
           cp mobile/android/app/build/outputs/apk/debug/app-debug.apk mobile/test-results/android/Upup-2.0.1-android-test.apk
           sha256sum mobile/test-results/android/*.apk > mobile/test-results/android/SHA256SUMS.txt
           printf '%s\n' "Source commit: $GITHUB_SHA" 'API: https://app.okekxf.cn (deployment pending)' 'Debug signed; not a store release. Session expires after 12 hours.' > mobile/test-results/android/BUILD.txt
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Verify native startup and encrypted session on Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: |
+            bash mobile/android/gradlew -p mobile/android connectedDebugAndroidTest --no-daemon
+            adb shell am start -n cn.okekxf.growth.dev/cn.okekxf.growth.MainActivity
+            sleep 3
+            adb exec-out screencap -p > mobile/test-results/android/startup.png
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -51,6 +71,8 @@ jobs:
           path: |
             mobile/test-results/
             mobile/android/app/build/reports/lint-results-debug.html
+            mobile/android/app/build/reports/androidTests/
+            mobile/android/app/build/outputs/androidTest-results/
           retention-days: 30
   ios:
     runs-on: macos-latest
@@ -75,6 +97,16 @@ jobs:
           set -o pipefail
           xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ios/build CODE_SIGNING_ALLOWED=NO build 2>&1 | tee test-results/ios/build.log
           ditto -c -k --sequesterRsrc --keepParent ios/build/Build/Products/Debug-iphonesimulator/App.app test-results/ios/Upup-ios-simulator.zip
+      - name: Launch iOS simulator for startup screenshot
+        working-directory: mobile
+        run: |
+          DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; print(next(d["udid"] for ds in json.load(sys.stdin)["devices"].values() for d in ds if "iPhone" in d["name"]))')
+          xcrun simctl boot "$DEVICE_ID"
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcrun simctl install "$DEVICE_ID" ios/build/Build/Products/Debug-iphonesimulator/App.app
+          xcrun simctl launch "$DEVICE_ID" cn.okekxf.growth
+          sleep 8
+          xcrun simctl io "$DEVICE_ID" screenshot test-results/ios/startup.png
       - uses: actions/upload-artifact@v4
         if: always()
         with:

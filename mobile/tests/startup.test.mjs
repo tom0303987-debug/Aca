@@ -37,7 +37,7 @@ test('actual server entry point (Windows launcher on Windows) starts with isolat
     assert.equal(response?.status,200,output);
     assert.ok(existsSync(join(dir,'data/club.sqlite')),'Startup creates SQLite in app directory');
     const page=await fetch(`http://127.0.0.1:${port}/`);
-    assert.match(await page.text(),/同行成长/);
+    assert.match(await page.text(),/Upup有目标/);
   }finally{
     if(child?.pid&&child.exitCode===null){
       const exited=once(child,'exit');

@@ -1,0 +1,83 @@
+name: Build mobile test packages
+on:
+  push:
+    branches: [dev/mobile-app-v2]
+    paths: ['mobile/**', '.github/workflows/mobile-build.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: mobile-build-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.21.0'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: mobile
+      - run: npm run verify
+        working-directory: mobile
+      - run: npm run native:android
+        working-directory: mobile
+        env:
+          ACA_API_BASE: https://app.okekxf.cn
+      - name: Compile and check Android application
+        working-directory: mobile/android
+        run: bash gradlew assembleDebug lintDebug --no-daemon
+      - name: Package APK and build provenance
+        shell: bash
+        run: |
+          mkdir -p mobile/test-results/android
+          cp mobile/android/app/build/outputs/apk/debug/app-debug.apk mobile/test-results/android/Upup-2.0.1-android-test.apk
+          sha256sum mobile/test-results/android/*.apk > mobile/test-results/android/SHA256SUMS.txt
+          printf '%s\n' "Source commit: $GITHUB_SHA" 'API: https://app.okekxf.cn (deployment pending)' 'Debug signed; not a store release. Session expires after 12 hours.' > mobile/test-results/android/BUILD.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Upup-android-test
+          path: |
+            mobile/test-results/
+            mobile/android/app/build/reports/lint-results-debug.html
+          retention-days: 30
+  ios:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.21.0'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: mobile
+      - run: npm run native:ios
+        working-directory: mobile
+        env:
+          ACA_API_BASE: https://app.okekxf.cn
+      - name: Compile iOS simulator application without signing
+        working-directory: mobile
+        run: |
+          mkdir -p test-results/ios
+          set -o pipefail
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ios/build CODE_SIGNING_ALLOWED=NO build 2>&1 | tee test-results/ios/build.log
+          ditto -c -k --sequesterRsrc --keepParent ios/build/Build/Products/Debug-iphonesimulator/App.app test-results/ios/Upup-ios-simulator.zip
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Upup-ios-simulator
+          path: mobile/test-results/ios/
+          retention-days: 30

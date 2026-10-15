@@ -10,7 +10,7 @@ const files = {
   '/index.html': ['index.html','text/html; charset=utf-8'],
   '/app.css': ['app.css','text/css; charset=utf-8'],
   '/growth.js': ['growth.js','text/javascript; charset=utf-8'],
-  '/app.js': ['app.js','text/javascript; charset=utf-8'],
+  '/native.js':['native.js','text/javascript; charset=utf-8'],'/app.js': ['app.js','text/javascript; charset=utf-8'],
   '/config.js': ['config.js','text/javascript; charset=utf-8'],
   '/privacy.html': ['privacy.html','text/html; charset=utf-8'],
   '/icon.svg': ['icon.svg','image/svg+xml']

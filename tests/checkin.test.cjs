@@ -1,3 +1,5 @@
+// Financial fixtures use Chinese calendar dates; keep them deterministic on CI runners.
+process.env.TZ = 'Asia/Shanghai';
 const fs = require('node:fs');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');

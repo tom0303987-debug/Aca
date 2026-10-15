@@ -38,8 +38,9 @@ test('HTTP integration: real sessions, untrusted scoring, permissions, origins, 
   assert.equal((await api('/data/club.sqlite')).status,404,'Database cannot be downloaded');
   assert.equal((await api('/server/service.mjs')).status,404,'Server source cannot be downloaded');
   const staticResponse=await fetch(base+'/');assert.equal(staticResponse.status,200);
-  assert.match(await staticResponse.text(),/同行成长/);
+  assert.match(await staticResponse.text(),/Upup有目标/);
   assert.match(staticResponse.headers.get('content-security-policy'),/script-src 'self'/);
+  assert.equal((await fetch(base+'/native.js')).status,200);
   const bad=await fetch(base+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:'{'});assert.equal(bad.status,400);
   const huge=await fetch(base+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:'x'.repeat(20000)})});assert.equal(huge.status,413);
   for(let i=0;i<21;i++)await api('/api/login',{method:'POST',body:{username:'absent',password:'incorrect'}});

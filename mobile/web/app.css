@@ -4,3 +4,6 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 
 .checkin-calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:20px 0}.checkin-calendar>div{border:1px solid #d5dded;border-radius:10px;text-align:center;padding:7px 1px;color:#60708a}.checkin-calendar small{font-size:9px}.checkin-calendar b{display:block;font-size:18px}.checkin-calendar .checked{background:#e2eee9;color:#2d6558;border-color:#adc8bc}
+
+/* Device cutouts, on-screen keyboards and touch controls. */
+html{color-scheme:light}body{background:#DCE2F1}.native-app .shell{padding-top:calc(20px + env(safe-area-inset-top,0px))}button,input,select{min-height:44px}input,select,textarea{font-size:16px}dialog{max-height:calc(100dvh - 48px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto}button:focus-visible,a:focus-visible{outline:3px solid #425b99;outline-offset:3px}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}

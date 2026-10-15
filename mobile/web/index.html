@@ -5,18 +5,20 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#DCE2F1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https:; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'self'">
-  <title>同行成长 · 个人成长与小组同行</title>
+  <title>Upup有目标 · 个人成长与小组同行</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./app.css">
   <script src="./config.js" defer></script>
+  <script src="./native.js" defer></script>
   <script src="./growth.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
 <div class="ambient" aria-hidden="true"></div>
 <main class="shell">
-  <header class="brand"><a class="brand-lockup" href="./"><img src="./icon.svg" alt="" width="40" height="40"><span>同行成长<small>GROW TOGETHER</small></span></a><span class="dev-badge">整合版 2.0</span></header>
+  <header class="brand"><a class="brand-lockup" href="./"><img src="./icon.svg" alt="" width="40" height="40"><span>Upup有目标<small>GROW TOGETHER</small></span></a><span class="dev-badge">内测版 2.0.1</span></header>
   <p class="notice-banner"><span id="environment-label">正在连接服务…</span> · 个人记录仅本人可见，小组只共享参榜统计</p>
+  <button id="retry-connection" class="quiet hidden" type="button">重新连接服务器</button>
   <div id="feedback" class="feedback hidden" role="status" aria-live="polite"></div>
 
   <section id="auth-view" class="auth-layout">
@@ -101,7 +103,7 @@
       <form id="delete-form" class="card danger-zone"><h3>删除账号</h3><p class="muted">永久删除本账号、个人成长、收支、奖励、服务端签到与行动记录；仍有其他成员的小组须先转让组长。不会删除独立的线上 V12 本地存档。</p><label for="delete-password">输入当前密码确认身份</label><input id="delete-password" type="password" autocomplete="current-password" required maxlength="128"><label class="checkbox"><input id="delete-confirm" type="checkbox" required><span>我理解删除不可恢复，已导出需要保留的数据。</span></label><button class="danger" type="submit">永久删除此账号</button></form>
     </section>
   </section>
-  <footer>同行成长 · 让坚持被看见，也让休息被尊重。<br>Aca × QuantLife · 个人经验与小组积分独立 · 尚未上架应用商店</footer>
+  <footer>Upup有目标 · 让坚持被看见，也让休息被尊重。<br>Aca × QuantLife · 个人经验与小组积分独立 · 尚未上架应用商店</footer>
 </main>
 <dialog id="editor-dialog"><form id="editor-form"><header class="dialog-heading"><h2 id="editor-title">编辑</h2><button id="editor-close" type="button" class="quiet" aria-label="关闭">×</button></header><div id="editor-fields"></div><p id="editor-error" class="error-text" role="alert"></p><div class="row"><button type="submit" class="primary" id="editor-submit">保存</button><button type="button" id="editor-cancel" class="quiet">取消</button></div></form></dialog>
 <dialog id="ai-dialog"><header class="dialog-heading"><h2>AI 辅助规划</h2><button id="ai-close" class="quiet" aria-label="关闭">×</button></header><p class="muted">可选功能。仅在管理员配置服务后可用。提交的这段文字会发送到所配置的 AI 服务，不会发送你的账本或其他记录。</p><label for="ai-text">目标、现状或今天完成的行动</label><textarea id="ai-text" rows="5" maxlength="4000" placeholder="例如：我想在一个月内建立每天阅读的习惯…"></textarea><select id="ai-type" aria-label="AI 辅助类型"><option value="plan">拆解目标</option><option value="activity">整理行动</option></select><button id="ai-run" class="primary">发送这段文字并生成建议</button><div id="ai-result" aria-live="polite"></div></dialog>

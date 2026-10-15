@@ -11,3 +11,13 @@
 **未执行**：真实浏览器视觉与操作、手机真机、Android APK编译签名、iOS编译、真实HTTPS服务器上线、第三方AI调用、应用商店审核。当前工作环境缺少网站技能要求的受支持浏览器预览能力；自动化接口测试不等同于界面验收。
 
 远端开发分支配置了Windows/Linux自动化测试及Android工程生成。运行成功后可在GitHub Actions查看本次提交对应报告；不要把此前版本的Windows结果视为本版结果。
+
+## 本次远端验证已完成
+
+GitHub Actions： https://github.com/tom0303987-debug/Aca/actions/runs/38667890961
+
+代码提交：`f8cc821a44ba90791c5f57224725af2843699ed8`。
+
+- Ubuntu/Linux：自动化测试、网页构建、Android工程生成全部成功。
+- Windows：官方Node便携安装及校验、自动化测试、网页构建、Android工程生成全部成功。
+- 两个平台工作流均为 success。此结论不包含浏览器、真机、签名和商店审核。

@@ -3,19 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#151122">
+  <meta name="theme-color" content="#DCE2F1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https:; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'self'">
-  <title>同行成长 · 开发验证版</title>
+  <title>同行成长 · 个人成长与小组同行</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./app.css">
   <script src="./config.js" defer></script>
+  <script src="./growth.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
 <div class="ambient" aria-hidden="true"></div>
 <main class="shell">
-  <header class="brand"><a class="brand-lockup" href="./"><img src="./icon.svg" alt="" width="40" height="40"><span>同行成长<small>GROW TOGETHER</small></span></a><span class="dev-badge">开发验证版</span></header>
-  <p class="notice-banner">只连接你启动的开发服务 · 不属于线上 V12 · 请使用测试账号</p>
+  <header class="brand"><a class="brand-lockup" href="./"><img src="./icon.svg" alt="" width="40" height="40"><span>同行成长<small>GROW TOGETHER</small></span></a><span class="dev-badge">整合版 2.0</span></header>
+  <p class="notice-banner"><span id="environment-label">正在连接服务…</span> · 个人记录仅本人可见，小组只共享参榜统计</p>
   <div id="feedback" class="feedback hidden" role="status" aria-live="polite"></div>
 
   <section id="auth-view" class="auth-layout">
@@ -27,37 +28,55 @@
       <div class="sample-card"><span class="spark">✦</span><div><strong>今天完成一点，就值得鼓励</strong><p>签到 +1 · 统一行动各 +2 · 每日上限 7 分</p></div></div>
     </div>
     <div class="card auth-card">
-      <div class="segmented" role="group" aria-label="登录或注册"><button id="login-tab" class="selected" type="button">登录</button><button id="register-tab" type="button">注册测试账号</button></div>
+      <div class="segmented" role="group" aria-label="登录或注册"><button id="login-tab" class="selected" type="button">登录</button><button id="register-tab" type="button">创建账号</button></div>
       <h2 id="auth-heading">欢迎回来</h2>
       <p class="muted" id="auth-description">你的成长，不需要从头开始。</p>
       <form id="auth-form">
         <label for="username">用户名</label><input id="username" name="username" autocomplete="username" pattern="[A-Za-z0-9_]{3,24}" minlength="3" maxlength="24" required placeholder="3～24 位英文、数字或下划线">
         <div id="nickname-field" class="hidden"><label for="nickname">小组内昵称</label><input id="nickname" name="nickname" maxlength="20" placeholder="朋友看到的名字"></div>
+        <div id="registration-code-field" class="hidden"><label for="registration-code">内部注册口令</label><input id="registration-code" type="password" maxlength="128" autocomplete="off" placeholder="由管理员提供，和小组邀请码不同"></div>
         <label for="password">密码</label><input id="password" name="password" type="password" autocomplete="current-password" minlength="12" maxlength="128" required placeholder="至少 12 位，请勿使用常用密码">
-        <label id="consent-field" class="checkbox hidden"><input id="auth-consent" type="checkbox"><span>我已阅读<a href="./privacy.html" target="_blank" rel="noopener">开发验证说明</a>，同意使用测试数据验证账号功能。</span></label>
+        <label id="consent-field" class="checkbox hidden"><input id="auth-consent" type="checkbox"><span>我已阅读<a href="./privacy.html" target="_blank" rel="noopener">数据与隐私说明</a>，了解本服务的数据保存与小组共享规则。</span></label>
         <button class="primary full" id="auth-submit" type="submit">登录并继续 <span aria-hidden="true">→</span></button>
       </form>
-      <p class="fine">无短信费用，不采集手机号。此版不提供找回密码；刷新后需重新登录。尚无线上服务和商店安装包。</p>
+      <p class="fine">不采集手机号。浏览器会话有效期12小时，刷新可继续使用；退出登录或改密可撤销会话。请记好密码，目前没有自助找回。</p>
     </div>
   </section>
 
   <section id="app-view" class="hidden">
     <div class="welcome"><div><p class="eyebrow" id="today-label">北京时间</p><h1 id="greeting">今天，也向前一点。</h1></div><button id="refresh" class="quiet" type="button">刷新数据 ↻</button></div>
     <p id="sync-status" class="muted" aria-live="polite"></p>
-    <nav class="bottom-nav" aria-label="主要导航"><button data-page="today" class="selected" type="button"><span>☀</span>今日</button><button data-page="group" type="button"><span>◈</span>小组</button><button data-page="board" type="button"><span>↗</span>榜单</button><button data-page="account" type="button"><span>◎</span>我的</button></nav>
+    <nav class="bottom-nav" aria-label="主要导航"><button data-page="today" class="selected" type="button"><span>☀</span>今日</button><button data-page="growth" type="button"><span>✦</span>成长</button><button data-page="group" type="button"><span>◈</span>小组</button><button data-page="finance" type="button"><span>▤</span>账本</button><button data-page="account" type="button"><span>◎</span>我的</button></nav>
 
     <section data-panel="today">
       <div class="dashboard-grid">
-        <article class="card checkin-card"><p class="eyebrow">DAILY CHECK-IN</p><h2>到场，就是一个好开始。</h2><p class="muted">签到只代表今天来过，行动让成长更具体。</p><div class="checkin-row"><div><strong id="streak">0</strong><span>天连续签到</span></div><button id="checkin" class="primary" type="button">今日签到 +1</button></div><p class="fine">北京时间 00:00 开启新一天，漏签不扣分。</p></article>
+        <article class="card checkin-card"><p class="eyebrow">DAILY CHECK-IN</p><h2>到场，就是一个好开始。</h2><p class="muted">签到同时记录个人成长与小组积分；两套计分独立。</p><div id="checkin-calendar" class="checkin-calendar" aria-label="近7天签到"></div><div class="checkin-row"><div><strong id="streak">0</strong><span>天连续签到</span></div><button id="checkin" class="primary" type="button">今日签到 +1</button></div><p id="checkin-totals" class="fine"></p><p class="fine">北京时间每日一次。个人签到 +1，连续每满7天额外 +3 奖励点与经验；小组签到始终 +1 分。</p></article>
         <article class="card points-card"><p class="eyebrow">MY PROGRESS</p><div class="points"><strong id="today-points">0</strong><span>/ 7 今日积分</span></div><progress id="daily-progress" max="7" value="0" aria-label="今日积分进度"></progress><div class="stat-line"><span>本周累计</span><b id="week-points">0 分</b></div><p class="fine">积分是行动记录，不代表个人价值。</p></article>
       </div>
       <div class="section-heading"><div><h2>今天的三个小行动</h2><p class="muted">每项每天一次，按实际完成情况确认。</p></div><span class="pill">统一计分</span></div>
       <div id="actions" class="action-grid"></div>
-      <div class="card soft"><strong>个人成长和小组竞争，各有空间。</strong><p class="muted">原 V12 的自定义任务、能力值、奖励和收支保持独立，不上传为排行榜积分。此开发版尚未迁移或同步你的旧存档。</p></div>
+      <div class="section-heading"><div><h2>我的今日任务</h2><p class="muted">先选一件重要的事，完成后记录进步。</p></div><button class="primary" data-editor="task">＋ 新任务</button></div>
+      <div class="toolbar"><input id="task-search" aria-label="搜索任务" placeholder="搜索任务…"><select id="task-filter" aria-label="筛选任务"><option value="active">待完成</option><option value="done">本期完成</option><option value="all">全部任务</option><option value="archived">已归档</option></select></div>
+      <div id="task-list" class="task-list"></div>
+      <div class="card soft"><strong>个人成长和小组竞争，各有空间。</strong><p class="muted">个人经验用于成长，奖励点用于兑换，小组积分用于排名。自定义任务与收支不会上传为排行榜积分。旧存档可在“我的”中预览导入。</p></div>
     </section>
 
+    <section data-panel="growth" class="hidden">
+      <div class="section-heading"><div><p class="eyebrow">YOUR OWN JOURNEY</p><h2>每一点积累，都有回响。</h2></div><button class="secondary" data-editor="activity">＋ 记录行动</button></div>
+      <div id="growth-stats" class="stat-grid"></div>
+      <div class="two-columns"><article class="card"><div class="section-heading"><h3>我的成长维度</h3><button class="quiet" data-editor="dimension">＋ 维度</button></div><div id="radar"></div><div id="dimension-list"></div></article><article class="card"><div class="section-heading"><h3>近7天成长</h3><button class="quiet" id="ai-plan-open">AI 辅助</button></div><div id="week-chart" class="week-chart"></div><div id="growth-history"></div></article></div>
+      <div class="section-heading"><div><h2>主线与阶段目标</h2><p class="muted">关联任务自动推进，也可以手动记录进度。</p></div><button class="primary" data-editor="goal">＋ 新主线</button></div><div id="goal-list" class="two-columns"></div>
+      <div class="section-heading"><div><h2>给自己的奖励</h2><p class="muted" id="coin-balance"></p></div><button class="secondary" data-editor="reward">＋ 新奖励</button></div><div id="reward-list" class="action-grid"></div>
+      <div class="section-heading"><h2>成长足迹</h2></div><div id="achievement-list" class="achievement-grid"></div>
+    </section>
+    <section data-panel="finance" class="hidden">
+      <div class="section-heading"><div><p class="eyebrow">PRIVATE LEDGER</p><h2>让收支，也有方向。</h2><p class="muted">仅自己可见，不参与小组排名。</p></div><button class="primary" data-editor="finance">＋ 记一笔</button></div>
+      <div class="toolbar"><select id="finance-period" aria-label="统计周期"><option value="month">本月</option><option value="today">今天</option><option value="week">近7天</option><option value="all">累计</option></select><select id="finance-filter" aria-label="收支类型"><option value="all">全部类型</option><option value="income">收入</option><option value="expense">支出</option></select></div>
+      <div id="finance-stats" class="stat-grid"></div><article class="card" id="wealth-card"></article><div id="finance-list" class="card"></div>
+    </section>
     <section data-panel="group" class="hidden">
       <div class="section-heading"><div><h2>我的同行小组</h2><p class="muted">每组最多 30 人，只向组员分享参榜数据。</p></div></div>
+      <button class="secondary" data-page="board" type="button">查看小组排行榜 ↗</button>
       <div id="group-list" class="group-list"></div>
       <div class="two-columns">
         <form id="create-group" class="card"><h3>建立一个小组</h3><label for="group-name">小组名称</label><input id="group-name" minlength="2" maxlength="24" required placeholder="例如：每天前进一点点"><label class="checkbox"><input id="create-consent" type="checkbox" required><span>同意向加入的成员展示昵称、签到与行动统计，以及本周和上周同期积分；不含任何收支。</span></label><button class="primary" type="submit">创建小组</button></form>
@@ -75,12 +94,16 @@
     </section>
 
     <section data-panel="account" class="hidden">
-      <div class="card"><h2>我的账号</h2><p id="account-info"></p><p class="muted">密码经加盐哈希保存。登录令牌仅保存在当前页面内存，不写入浏览器存储。组长也无法查看你的密码。</p><div class="row"><button id="export-account" class="secondary" type="button">导出我的数据</button><button id="logout" class="quiet" type="button">退出登录</button><a href="./privacy.html" target="_blank" rel="noopener">开发验证说明 ↗</a></div></div>
+      <div class="card"><h2>我的账号</h2><p id="account-info"></p><p class="muted">密码经加盐哈希保存。网页使用 HttpOnly 会话 Cookie，脚本无法读取该 Cookie；组长无法查看你的密码、任务和账本。</p><div class="row"><button id="export-account" class="secondary" type="button">导出我的数据</button><button id="logout" class="quiet" type="button">退出登录</button><a href="./privacy.html" target="_blank" rel="noopener">数据与隐私说明 ↗</a></div></div>
+      <div class="card"><div class="section-heading"><h3>个人资料</h3><button class="quiet" data-editor="profile">编辑</button></div><p id="personal-profile"></p></div>
+      <div class="card"><h3>让旧记录一起同行</h3><p class="muted">支持 Aca V9–V12、QuantLife 进度 JSON、整合版备份。先预览再确认，导入不增加排行榜积分。导入前建议先导出当前数据。</p><label for="import-file">选择 JSON 存档（最大8 MB）</label><input id="import-file" type="file" accept=".json,application/json"><div id="import-preview" class="hidden"></div><div id="import-log"></div></div>
       <form id="password-form" class="card"><h3>修改密码</h3><label for="current-password">当前密码</label><input id="current-password" type="password" autocomplete="current-password" required maxlength="128"><label for="new-password">新密码（至少 12 位）</label><input id="new-password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required><button class="secondary" type="submit">修改并退出所有设备</button></form>
-      <form id="delete-form" class="card danger-zone"><h3>删除开发账号</h3><p class="muted">永久删除本账号、服务端签到与行动记录；仍有其他成员的小组须先转让组长。不会删除独立的线上 V12 本地存档。</p><label for="delete-password">输入当前密码确认身份</label><input id="delete-password" type="password" autocomplete="current-password" required maxlength="128"><label class="checkbox"><input id="delete-confirm" type="checkbox" required><span>我理解删除不可恢复，已导出需要保留的数据。</span></label><button class="danger" type="submit">永久删除此开发账号</button></form>
+      <form id="delete-form" class="card danger-zone"><h3>删除账号</h3><p class="muted">永久删除本账号、个人成长、收支、奖励、服务端签到与行动记录；仍有其他成员的小组须先转让组长。不会删除独立的线上 V12 本地存档。</p><label for="delete-password">输入当前密码确认身份</label><input id="delete-password" type="password" autocomplete="current-password" required maxlength="128"><label class="checkbox"><input id="delete-confirm" type="checkbox" required><span>我理解删除不可恢复，已导出需要保留的数据。</span></label><button class="danger" type="submit">永久删除此账号</button></form>
     </section>
   </section>
-  <footer>同行成长 · 让坚持被看见，也让休息被尊重。<br>本地开发验证 · 未部署云端 · 未上架应用商店</footer>
+  <footer>同行成长 · 让坚持被看见，也让休息被尊重。<br>Aca × QuantLife · 个人经验与小组积分独立 · 尚未上架应用商店</footer>
 </main>
+<dialog id="editor-dialog"><form id="editor-form"><header class="dialog-heading"><h2 id="editor-title">编辑</h2><button id="editor-close" type="button" class="quiet" aria-label="关闭">×</button></header><div id="editor-fields"></div><p id="editor-error" class="error-text" role="alert"></p><div class="row"><button type="submit" class="primary" id="editor-submit">保存</button><button type="button" id="editor-cancel" class="quiet">取消</button></div></form></dialog>
+<dialog id="ai-dialog"><header class="dialog-heading"><h2>AI 辅助规划</h2><button id="ai-close" class="quiet" aria-label="关闭">×</button></header><p class="muted">可选功能。仅在管理员配置服务后可用。提交的这段文字会发送到所配置的 AI 服务，不会发送你的账本或其他记录。</p><label for="ai-text">目标、现状或今天完成的行动</label><textarea id="ai-text" rows="5" maxlength="4000" placeholder="例如：我想在一个月内建立每天阅读的习惯…"></textarea><select id="ai-type" aria-label="AI 辅助类型"><option value="plan">拆解目标</option><option value="activity">整理行动</option></select><button id="ai-run" class="primary">发送这段文字并生成建议</button><div id="ai-result" aria-live="polite"></div></dialog>
 </body>
 </html>

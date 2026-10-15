@@ -1,7 +1,7 @@
 name: Mobile development validation
 on:
   push:
-    branches: [dev/mobile-validation-v1]
+    branches: [dev/mobile-validation-v1, dev/unified-growth-v2]
     paths: ['mobile/**', '.github/workflows/mobile-validation.yml']
   workflow_dispatch:
 permissions:

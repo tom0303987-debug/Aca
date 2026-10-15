@@ -8,7 +8,7 @@ import { Script } from 'node:vm';
 const root=join(dirname(fileURLToPath(import.meta.url)),'..');
 test('frontend wiring has real DOM targets and static local assets',()=>{
   const html=readFileSync(join(root,'web/index.html'),'utf8'),js=readFileSync(join(root,'web/app.js'),'utf8');
-  new Script(js);new Script(readFileSync(join(root,'web/config.js'),'utf8'));
+  new Script(js);new Script(readFileSync(join(root,'web/growth.js'),'utf8'));new Script(readFileSync(join(root,'web/config.js'),'utf8'));
   const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(x=>x[1]);
   assert.equal(ids.length,new Set(ids).size,'HTML IDs must be unique');
   for(const match of js.matchAll(/\$\('([^']+)'\)/g))assert.ok(ids.includes(match[1]),'Missing element: '+match[1]);
@@ -16,5 +16,5 @@ test('frontend wiring has real DOM targets and static local assets',()=>{
   assert.ok(!/\bon(?:click|submit|change)=/.test(html),'CSP-compatible event wiring');
   assert.ok(!/localStorage|sessionStorage/.test(js),'No browser credential persistence');
   const config=JSON.parse(readFileSync(join(root,'capacitor.config.json'),'utf8'));
-  assert.equal(config.webDir,'dist');assert.equal(config.server,undefined,'No remote WebView URL or cleartext override');
+  assert.equal(config.backgroundColor,'#DCE2F1');assert.equal(config.webDir,'dist');assert.equal(config.server,undefined,'No remote WebView URL or cleartext override');
 });

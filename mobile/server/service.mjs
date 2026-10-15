@@ -1,3 +1,4 @@
+import { createGrowth } from './growth.mjs';
 import { DatabaseSync } from 'node:sqlite';
 import { randomBytes, randomUUID, createHash, scrypt as scryptCallback, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
@@ -72,6 +73,7 @@ export function createService({ filename = ':memory:', clock = Date.now } = {}) 
     CREATE INDEX IF NOT EXISTS events_day ON events(day,user_id);
     PRAGMA user_version=1;
   `);
+  const growth = createGrowth({db,clock,dayKey,AppError});
   const one = (sql, ...args) => db.prepare(sql).get(...args);
   const all = (sql, ...args) => db.prepare(sql).all(...args);
   const run = (sql, ...args) => db.prepare(sql).run(...args);
@@ -135,8 +137,10 @@ export function createService({ filename = ':memory:', clock = Date.now } = {}) 
     const days = new Set(events.filter(x => x.kind === 'checkin').map(x => x.day));
     let cursor = days.has(today) ? today : shiftDay(today, -1), streak = 0;
     while (days.has(cursor)) { streak++; cursor = shiftDay(cursor, -1); }
-    return { today, weekStart: start, timezone: 'Asia/Shanghai', checkedIn: days.has(today), streak,
+    let best=0,runLength=0,last='';for(const day of [...days].sort()){runLength=last&&shiftDay(last,1)===day?runLength+1:1;best=Math.max(best,runLength);last=day;}
+    return { checkinBest:best,checkinDays:[...days].sort().slice(-31),today, weekStart: start, timezone: 'Asia/Shanghai', checkedIn: days.has(today), streak,
       todayPoints: todayEvents.reduce((sum,x) => sum+x.points,0),
+      checkinTotal:days.size,checkinMonth:[...days].filter(x=>x.startsWith(today.slice(0,7))).length,
       weekPoints: events.filter(x => x.day >= start).reduce((sum,x) => sum+x.points,0),
       completed: todayEvents.filter(x => x.kind === 'action').map(x => x.subject), actions: ACTIONS, groups: groups(userId) };
   }
@@ -145,6 +149,7 @@ export function createService({ filename = ':memory:', clock = Date.now } = {}) 
     const now = clock(), today = dayKey(now), points = kind === 'checkin' ? 1 : 2;
     return transaction(() => {
       const result = run('INSERT OR IGNORE INTO events VALUES(?,?,?,?,?,?)', userId, kind, subject, today, points, now);
+      if(result.changes===1)growth.recordStandard(userId,kind,subject,today);
       return { awarded: result.changes === 1, points: result.changes ? points : 0, summary: summary(userId) };
     });
   }
@@ -240,10 +245,10 @@ export function createService({ filename = ':memory:', clock = Date.now } = {}) 
     });
   }
   function exportAccount(userId) {
-    return {version:1,exportedAt:clock(),profile:publicUser(one('SELECT * FROM users WHERE id=?',userId)),
+    return {format:'aca-unified-v2',version:2,growth:growth.get(userId),importedOriginals:growth.archive(userId),exportedAt:clock(),profile:publicUser(one('SELECT * FROM users WHERE id=?',userId)),
       events:all('SELECT kind,subject,day,points,created_at AS createdAt FROM events WHERE user_id=? ORDER BY day',userId),groups:groups(userId)};
   }
-  return {register,login,authenticate,summary,record,createGroup,newInvite,previewInvite,join,board,setRanking,members,transfer,leave,removeMember,changePassword,deleteAccount,exportAccount,
+  return {growth,register,login,authenticate,summary,record,createGroup,newInvite,previewInvite,join,board,setRanking,members,transfer,leave,removeMember,changePassword,deleteAccount,exportAccount,
     logout:value=>{run('DELETE FROM sessions WHERE token_hash=?',digest(value));return {ok:true};},
     revokeInvite:(userId,groupId)=>{owner(userId,groupId);run('DELETE FROM invites WHERE group_id=?',groupId);return {ok:true};},
     close:()=>db.close()};

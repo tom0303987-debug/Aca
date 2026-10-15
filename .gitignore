@@ -10,3 +10,6 @@ mobile/.env
 *.mobileprovision
 mobile/.runtime/
 mobile/test-results/
+
+mobile/backups/
+mobile/deploy/.env

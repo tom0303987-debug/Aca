@@ -1,0 +1,42 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    restart: unless-stopped
+    environment:
+      ACA_PUBLIC_ORIGIN: https://${APP_DOMAIN:?Set APP_DOMAIN in .env}
+      ACA_REGISTRATION_CODE: ${REGISTRATION_CODE:?Set a private registration code}
+      ACA_TRUST_PROXY: "true"
+      ACA_NATIVE_ORIGINS: capacitor://localhost,http://localhost,https://localhost
+      ACA_AI_ENDPOINT: ${AI_ENDPOINT:-}
+      ACA_AI_MODEL: ${AI_MODEL:-}
+      ACA_AI_KEY: ${AI_KEY:-}
+    volumes:
+      - app_data:/app/data
+      - app_backups:/app/backups
+    expose: ["8787"]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    read_only: true
+    tmpfs: [/tmp]
+    networks: [private]
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports: ["80:80", "443:443", "443:443/udp"]
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?Set APP_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on: [app]
+    networks: [private]
+volumes:
+  app_data:
+  app_backups:
+  caddy_data:
+  caddy_config:
+networks:
+  private:

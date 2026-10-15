@@ -1,6 +1,6 @@
 {
   "appId": "dev.acagrowth.internal",
-  "appName": "同行成长·开发版",
+  "appName": "同行成长",
   "webDir": "dist",
-  "backgroundColor": "#151122"
+  "backgroundColor": "#DCE2F1"
 }

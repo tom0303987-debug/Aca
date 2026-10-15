@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { aiAssist } from './planner.mjs';
 import { AppError } from './service.mjs';
 
 const webRoot = new URL('../web/',import.meta.url);
@@ -8,6 +9,7 @@ const files = {
   '/': ['index.html','text/html; charset=utf-8'],
   '/index.html': ['index.html','text/html; charset=utf-8'],
   '/app.css': ['app.css','text/css; charset=utf-8'],
+  '/growth.js': ['growth.js','text/javascript; charset=utf-8'],
   '/app.js': ['app.js','text/javascript; charset=utf-8'],
   '/config.js': ['config.js','text/javascript; charset=utf-8'],
   '/privacy.html': ['privacy.html','text/html; charset=utf-8'],
@@ -19,15 +21,21 @@ const securityHeaders = {
   'Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
 };
 function json(res,status,data) { res.writeHead(status,{'Content-Type':'application/json; charset=utf-8'});res.end(JSON.stringify(data)); }
-async function readJSON(req) {
+async function readJSON(req,maxSize=16384) {
   if(!req.headers['content-type']?.startsWith('application/json'))throw new AppError(415,'JSON_REQUIRED','请求必须使用 JSON');
   let size=0;const chunks=[];
-  for await(const chunk of req){size+=chunk.length;if(size>16384)throw new AppError(413,'BODY_TOO_LARGE','请求内容过大');chunks.push(chunk);}
+  for await(const chunk of req){size+=chunk.length;if(size>maxSize)throw new AppError(413,'BODY_TOO_LARGE','请求内容过大');chunks.push(chunk);}
   try{const value=JSON.parse(Buffer.concat(chunks).toString()||'{}');if(!value||typeof value!=='object'||Array.isArray(value))throw Error();return value;}
   catch{throw new AppError(400,'BAD_JSON','请求内容格式不正确');}
 }
 
-export function createAppServer(service) {
+export function createAppServer(service, options={}) {
+  const publicOrigin=options.publicOrigin||'';
+  if(publicOrigin){const u=new URL(publicOrigin);if(u.protocol!=='https:'||u.origin!==publicOrigin)throw Error('Public origin must be an HTTPS origin');}
+  const allowedNative=new Set(options.nativeOrigins||[]);
+  for(const origin of allowedNative)if(!['capacitor://localhost','http://localhost','https://localhost'].includes(origin))throw Error('Unsupported native origin');
+  const cookie=(value,age=43200)=>`aca_session=${value}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${age}${publicOrigin?'; Secure':''}`;
+
   const buckets=new Map();let authInFlight=0;
   function limit(key,count,windowMs) {
     const now=Date.now();let entry=buckets.get(key);
@@ -40,8 +48,13 @@ export function createAppServer(service) {
     try {
       // Development server intentionally accepts only loopback hosts; no public deployment by accident.
       const url=new URL(req.url,'http://'+req.headers.host);
-      if(!['localhost','127.0.0.1','[::1]'].includes(url.hostname))throw new AppError(403,'LOCAL_ONLY','此开发服务器仅允许本机访问');
-      if(req.headers.origin&&req.headers.origin!==url.origin)throw new AppError(403,'ORIGIN_DENIED','不允许此来源访问开发接口');
+      if(!(publicOrigin?req.headers.host===new URL(publicOrigin).host:['localhost','127.0.0.1','[::1]'].includes(url.hostname)))throw new AppError(403,'LOCAL_ONLY',publicOrigin?'域名与服务器配置不一致':'此开发服务器仅允许本机访问');
+      const origin=req.headers.origin,expected=publicOrigin||url.origin;
+      if(origin&&origin!==expected&&!allowedNative.has(origin))throw new AppError(403,'ORIGIN_DENIED','不允许此来源访问接口');
+      if(origin&&allowedNative.has(origin)){res.setHeader('Access-Control-Allow-Origin',origin);res.setHeader('Vary','Origin');res.setHeader('Access-Control-Allow-Headers','Authorization, Content-Type');res.setHeader('Access-Control-Allow-Methods','GET, POST, PATCH, DELETE, OPTIONS');res.setHeader('Access-Control-Allow-Credentials','true');}
+      if(req.method==='OPTIONS'){res.writeHead(204);res.end();return;}
+      const cookieToken=(req.headers.cookie||'').split(';').map(x=>x.trim()).find(x=>x.startsWith('aca_session='))?.slice(12)||'';
+      if(cookieToken&&!['GET','HEAD','OPTIONS'].includes(req.method)&&!req.headers.authorization&&origin!==expected)throw new AppError(403,'ORIGIN_REQUIRED','请从应用页面执行此操作');
       if(!url.pathname.startsWith('/api/')) {
         if(req.method!=='GET')throw new AppError(405,'METHOD_NOT_ALLOWED','不支持此操作');
         const file=files[url.pathname];
@@ -49,26 +62,31 @@ export function createAppServer(service) {
         const bytes=await readFile(fileURLToPath(new URL(file[0],webRoot)));
         res.writeHead(200,{'Content-Type':file[1]});res.end(bytes);return;
       }
-      const ip=req.socket.remoteAddress||'local';limit('ip:'+ip,240,60000);
+      const ip=options.trustProxy&&req.headers['x-forwarded-for']?String(req.headers['x-forwarded-for']).split(',').at(-1).trim():(req.socket.remoteAddress||'local');limit('ip:'+ip,240,60000);
       const method=req.method,path=url.pathname;
-      if(path==='/api/health'&&method==='GET'){json(res,200,{ok:true,mode:'local-development',version:'0.1.0'});return;}
+      if(path==='/api/health'&&method==='GET'){json(res,200,{ok:true,mode:publicOrigin?'hosted':'local-development',version:'2.0.0',aiEnabled:!!process.env.ACA_AI_KEY,registrationCodeRequired:!!options.registrationCode});return;}
       if((path==='/api/register'||path==='/api/login')&&method==='POST') {
         limit('auth:'+ip,20,15*60000);
         if(authInFlight>=4)throw new AppError(429,'AUTH_BUSY','登录服务繁忙，请稍后重试');
-        const body=await readJSON(req);authInFlight++;
-        try{json(res,path==='/api/register'?201:200,await service[path==='/api/register'?'register':'login'](body));}
+        const body=await readJSON(req);if(path==='/api/register'&&options.registrationCode&&body.registrationCode!==options.registrationCode)throw new AppError(403,'INVITATION_REQUIRED','请输入管理员提供的注册口令');authInFlight++;
+        try{const session=await service[path==='/api/register'?'register':'login'](body);res.setHeader('Set-Cookie',cookie(session.token));json(res,path==='/api/register'?201:200,session);}
         finally{authInFlight--;}
         return;
       }
-      const value=req.headers.authorization?.startsWith('Bearer ')?req.headers.authorization.slice(7):'';
+      const value=req.headers.authorization?.startsWith('Bearer ')?req.headers.authorization.slice(7):cookieToken;
       const user=service.authenticate(value);limit('user:'+user.id,120,60000);
-      const body=['POST','PATCH','PUT','DELETE'].includes(method)?await readJSON(req):{};
+      const body=['POST','PATCH','PUT','DELETE'].includes(method)?await readJSON(req,path.startsWith('/api/growth/import')?8*1024*1024:16384):{};
       let result;
       if(path==='/api/me'&&method==='GET')result={user,summary:service.summary(user.id)};
-      else if(path==='/api/logout'&&method==='POST')result=service.logout(value);
+      else if(path==='/api/logout'&&method==='POST'){result=service.logout(value);res.setHeader('Set-Cookie',cookie('',0));}
       else if(path==='/api/me/password'&&method==='POST')result=await service.changePassword(user.id,body);
       else if(path==='/api/me/export'&&method==='GET')result=service.exportAccount(user.id);
       else if(path==='/api/me'&&method==='DELETE')result=await service.deleteAccount(user.id,body.password);
+      else if(path==='/api/growth'&&method==='GET')result=service.growth.get(user.id);
+      else if(path==='/api/growth/command'&&method==='POST')result=service.growth.mutate(user.id,body);
+      else if(path==='/api/growth/import/preview'&&method==='POST')result=service.growth.preview(user.id,body.document);
+      else if(path==='/api/growth/import'&&method==='POST')result=service.growth.applyImport(user.id,body);
+      else if(path==='/api/assistant'&&method==='POST'){limit('ai:'+user.id,6,60000);result=await aiAssist(body);}
       else if(path==='/api/checkin'&&method==='POST')result=service.record(user.id,'checkin','daily');
       else if(path==='/api/actions/complete'&&method==='POST')result=service.record(user.id,'action',body.actionId);
       else if(path==='/api/groups'&&method==='POST')result=service.createGroup(user.id,body);

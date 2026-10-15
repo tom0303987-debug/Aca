@@ -1,0 +1,9 @@
+node_modules
+.runtime
+data
+backups
+test-results
+android
+ios
+.env
+deploy/.env

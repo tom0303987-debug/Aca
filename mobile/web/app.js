@@ -8,10 +8,10 @@
   function hideFeedback(){$('feedback').classList.add('hidden');}
   function clearAccount(){
     state.authEpoch++;state.token='';state.user=null;state.summary=null;state.board=null;state.boardGroup='';state.inviteGroup='';state.joinCode='';state.managementGroup='';boardRequest++;
-    for(const id of ['password','current-password','new-password','delete-password','invite-code','created-code'])$(id).value='';
+    for(const id of ['registration-code','password','current-password','new-password','delete-password','invite-code','created-code'])$(id).value='';
     for(const id of ['actions','group-list','member-list','leaderboard'])$(id).replaceChildren();
     for(const id of ['invite-result','join-preview','manage-group','app-view'])$(id).classList.add('hidden');
-    $('board-group').replaceChildren();$('auth-view').classList.remove('hidden');$('delete-confirm').checked=false;
+    $('board-group').replaceChildren();$('auth-view').classList.remove('hidden');window.GrowthUI?.clear();$('delete-confirm').checked=false;
     for(const id of ['account-info','greeting','sync-status','board-period'])$(id).textContent='';
   }
   async function api(path,method='GET',body){
@@ -19,7 +19,7 @@
     if(window.Capacitor?.isNativePlatform?.()&&!base)throw Error('原生开发包尚未配置后端，请先完成 HTTPS 服务部署。');
     const epoch=state.authEpoch;
     let response;
-    try{response=await fetch(base+path,{method,headers:{Accept:'application/json',...(body!==undefined?{'Content-Type':'application/json'}:{}),...(state.token?{Authorization:'Bearer '+state.token}:{})},body:body!==undefined?JSON.stringify(body):undefined,cache:'no-store',credentials:'omit',signal:AbortSignal.timeout(15000)});}
+    try{response=await fetch(base+path,{method,headers:{Accept:'application/json',...(body!==undefined?{'Content-Type':'application/json'}:{}),...(state.token?{Authorization:'Bearer '+state.token}:{})},body:body!==undefined?JSON.stringify(body):undefined,cache:'no-store',credentials:'include',signal:AbortSignal.timeout(path==='/api/assistant'?35000:15000)});}
     catch{throw Error('暂时无法连接开发服务，请检查服务是否启动后重试。');}
     let data;try{data=await response.json();}catch{throw Error('未连接到有效的开发接口，请检查启动地址。');}
     if(epoch!==state.authEpoch)throw Error('账号已切换，请重新操作。');
@@ -45,7 +45,7 @@
     state.authMode=mode;const registering=mode==='register';
     $('login-tab').classList.toggle('selected',!registering);$('register-tab').classList.toggle('selected',registering);
     $('nickname-field').classList.toggle('hidden',!registering);$('consent-field').classList.toggle('hidden',!registering);
-    $('nickname').required=registering;$('auth-consent').required=registering;
+    $('registration-code-field').classList.toggle('hidden',!registering);$('nickname').required=registering;$('auth-consent').required=registering;
     $('auth-heading').textContent=registering?'开始你的同行旅程':'欢迎回来';
     $('auth-description').textContent=registering?'创建测试账号，再邀请朋友加入。':'你的成长，不需要从头开始。';
     $('auth-submit').textContent=registering?'注册并开始 →':'登录并继续 →';
@@ -55,7 +55,9 @@
     const s=state.summary;if(!s)return;
     $('greeting').textContent=`${state.user.nickname}，今天向前一点。`;
     $('today-label').textContent=`${s.today} · 北京时间`;
-    $('sync-status').textContent=`上次读取：${new Date().toLocaleTimeString('zh-CN',{hour12:false})} · 请刷新查看伙伴的新进度`;
+    $('sync-status').textContent=`上次读取：${new Date().toLocaleTimeString('zh-CN',{hour12:false})} · 小组榜单每30秒刷新`;
+    $('checkin-totals').textContent=`本月 ${s.checkinMonth} 天 · 累计 ${s.checkinTotal} 天 · 最长连续 ${s.checkinBest} 天`;
+    $('checkin-calendar').innerHTML=Array.from({length:7},(_,i)=>{const day=new Date(Date.parse(s.today+'T12:00:00Z')-(6-i)*86400000).toISOString().slice(0,10),yes=s.checkinDays.includes(day);return `<div class="${yes?'checked':''}"><small>${day.slice(5)}</small><b>${yes?'✓':'·'}</b></div>`;}).join('');
     $('streak').textContent=s.streak;$('today-points').textContent=s.todayPoints;$('week-points').textContent=s.weekPoints+' 分';$('daily-progress').value=s.todayPoints;
     $('checkin').textContent=s.checkedIn?'今日已签到 ✓':'今日签到 +1';$('checkin').disabled=s.checkedIn;
     const symbols=['◎','▱','↗'];
@@ -70,11 +72,11 @@
     $('account-info').textContent=`${state.user.nickname} · 用户名 ${state.user.username}`;
     renderBoard();
   }
-  async function refresh(){const data=await api('/api/me');state.user=data.user;state.summary=data.summary;renderSummary();if(state.page==='board')await loadBoard();}
+  async function refresh(){const data=await api('/api/me');state.user=data.user;state.summary=data.summary;renderSummary();if(state.page==='board')await loadBoard();if(window.GrowthUI)await window.GrowthUI.refresh();}
   function showPage(page){
-    state.page=page;document.querySelectorAll('[data-panel]').forEach(el=>el.classList.toggle('hidden',el.dataset.panel!==page));
+    state.page=page;window.scrollTo({top:0,behavior:'instant'});document.querySelectorAll('[data-panel]').forEach(el=>el.classList.toggle('hidden',el.dataset.panel!==page));
     document.querySelectorAll('[data-page]').forEach(el=>el.classList.toggle('selected',el.dataset.page===page));
-    if(page==='board')return loadBoard();
+    document.querySelectorAll('[data-page]').forEach(el=>el.classList.toggle('selected',el.dataset.page===page||(page==='board'&&el.dataset.page==='group')));if(page==='board')return loadBoard();
   }
   async function loadBoard(){
     state.board=null;renderBoard();if(!state.boardGroup)return;
@@ -107,18 +109,18 @@
   $('register-tab').addEventListener('click',()=>setAuthMode('register'));
   $('auth-form').addEventListener('submit',event=>{event.preventDefault();perform(async()=>{
     const registering=state.authMode==='register';
-    const data=await api(registering?'/api/register':'/api/login','POST',{username:$('username').value,password:$('password').value,...(registering?{nickname:$('nickname').value,accepted:$('auth-consent').checked}:{})});
+    const data=await api(registering?'/api/register':'/api/login','POST',{username:$('username').value,password:$('password').value,...(registering?{nickname:$('nickname').value,accepted:$('auth-consent').checked,registrationCode:$('registration-code').value}:{})});
     state.token=data.token;state.user=data.user;$('password').value='';
     try{await refresh();}catch(error){clearAccount();throw error;}
     $('auth-view').classList.add('hidden');$('app-view').classList.remove('hidden');showPage('today');feedback(registering?'账号已创建，先完成今天的一小步。':'登录成功，欢迎回来。');
   });});
   document.querySelectorAll('[data-page]').forEach(button=>button.addEventListener('click',()=>perform(()=>showPage(button.dataset.page))));
   $('refresh').addEventListener('click',()=>perform(async()=>{await refresh();feedback('已读取最新数据。');}));
-  $('checkin').addEventListener('click',()=>perform(async()=>{const data=await api('/api/checkin','POST',{});state.summary=data.summary;renderSummary();feedback(data.awarded?'签到成功，今日 +1 分。':'今天已经签到，不会重复加分。');}));
+  $('checkin').addEventListener('click',()=>perform(async()=>{const data=await api('/api/checkin','POST',{});state.summary=data.summary;renderSummary();await window.GrowthUI.refresh();feedback(data.awarded?'签到成功，今日 +1 分。':'今天已经签到，不会重复加分。');}));
   $('actions').addEventListener('click',event=>{const button=event.target.closest('[data-complete]');if(!button)return;perform(async()=>{
     const action=state.summary.actions.find(x=>x.id===button.dataset.complete);
     if(!confirm(`确认你今天已经完成“${action.title}”？请按实际情况记录。`))return;
-    const data=await api('/api/actions/complete','POST',{actionId:action.id});state.summary=data.summary;renderSummary();feedback(data.awarded?'已记录行动，+2 分。':'此行动今天已经计分。');
+    const data=await api('/api/actions/complete','POST',{actionId:action.id});state.summary=data.summary;renderSummary();await window.GrowthUI.refresh();feedback(data.awarded?'已记录行动，+2 分。':'此行动今天已经计分。');
   });});
   $('create-group').addEventListener('submit',event=>{event.preventDefault();perform(async()=>{const group=await api('/api/groups','POST',{name:$('group-name').value,accepted:$('create-consent').checked});$('create-group').reset();state.boardGroup=group.id;await refresh();feedback('小组已创建，可以生成邀请码邀请朋友。');});});
   $('invite-code').addEventListener('input',()=>{state.joinCode='';$('join-preview').classList.add('hidden');$('join-consent').checked=false;});
@@ -146,5 +148,8 @@
   $('delete-form').addEventListener('submit',event=>{event.preventDefault();perform(async()=>{if(!$('delete-confirm').checked)return;if(!confirm('最后确认：永久删除当前开发账号及服务端记录？'))return;await api('/api/me','DELETE',{password:$('delete-password').value});clearAccount();feedback('开发账号及关联记录已删除。');});});
   $('export-account').addEventListener('click',()=>perform(async()=>{const data=await api('/api/me/export');const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`同行成长-${state.summary.today}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);feedback('已发起下载；导出文件含个人记录，请妥善保管。');}));
   document.addEventListener('visibilitychange',()=>{if(document.hidden){state.board=null;renderBoard();}else if(state.user)feedback('欢迎回来，点击“刷新数据”读取伙伴的最新进度。');});
+  window.ClubUI={api,perform,feedback,getToday:()=>state.summary?.today||'',getUser:()=>state.user,showPage};
+  setInterval(()=>{if(state.user&&!document.hidden&&!pending)perform(()=>refresh());},30000);
   setAuthMode('login');
+  perform(async()=>{try{await refresh();$('auth-view').classList.add('hidden');$('app-view').classList.remove('hidden');showPage('today');}catch{clearAccount();}});
 })();

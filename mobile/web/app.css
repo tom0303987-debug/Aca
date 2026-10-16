@@ -7,3 +7,5 @@
 
 /* Device cutouts, on-screen keyboards and touch controls. */
 html{color-scheme:light}body{background:#DCE2F1}.native-app .shell{padding-top:calc(20px + env(safe-area-inset-top,0px))}button,input,select{min-height:44px}input,select,textarea{font-size:16px}dialog{max-height:calc(100dvh - 48px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto}button:focus-visible,a:focus-visible{outline:3px solid #425b99;outline-offset:3px}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+@media(max-width:760px){.native-app .intro-copy,.native-app .principles{display:none}.native-app .intro h1{font-size:28px}.native-app .auth-layout{gap:16px;padding-top:18px}.native-app .feedback{top:calc(6px + env(safe-area-inset-top,0px))}}

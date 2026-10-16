@@ -38,10 +38,10 @@
         <div id="nickname-field" class="hidden"><label for="nickname">小组内昵称</label><input id="nickname" name="nickname" maxlength="20" placeholder="朋友看到的名字"></div>
         <div id="registration-code-field" class="hidden"><label for="registration-code">内部注册口令</label><input id="registration-code" type="password" maxlength="128" autocomplete="off" placeholder="由管理员提供，和小组邀请码不同"></div>
         <label for="password">密码</label><input id="password" name="password" type="password" autocomplete="current-password" minlength="12" maxlength="128" required placeholder="至少 12 位，请勿使用常用密码">
-        <label id="consent-field" class="checkbox hidden"><input id="auth-consent" type="checkbox"><span>我已阅读<a href="./privacy.html" target="_blank" rel="noopener">数据与隐私说明</a>，了解本服务的数据保存与小组共享规则。</span></label>
+        <label id="consent-field" class="checkbox hidden"><input id="auth-consent" type="checkbox"><span>我已阅读<a href="./privacy.html">数据与隐私说明</a>，了解本服务的数据保存与小组共享规则。</span></label>
         <button class="primary full" id="auth-submit" type="submit">登录并继续 <span aria-hidden="true">→</span></button>
       </form>
-      <p class="fine">不采集手机号。浏览器会话有效期12小时，刷新可继续使用；退出登录或改密可撤销会话。请记好密码，目前没有自助找回。</p>
+      <p class="fine">不采集手机号。会话有效期12小时，重新打开可继续使用；退出登录或改密可撤销会话。请记好密码，目前没有自助找回。</p>
     </div>
   </section>
 
@@ -96,7 +96,7 @@
     </section>
 
     <section data-panel="account" class="hidden">
-      <div class="card"><h2>我的账号</h2><p id="account-info"></p><p class="muted">密码经加盐哈希保存。网页使用 HttpOnly 会话 Cookie，脚本无法读取该 Cookie；组长无法查看你的密码、任务和账本。</p><div class="row"><button id="export-account" class="secondary" type="button">导出我的数据</button><button id="logout" class="quiet" type="button">退出登录</button><a href="./privacy.html" target="_blank" rel="noopener">数据与隐私说明 ↗</a></div></div>
+      <div class="card"><h2>我的账号</h2><p id="account-info"></p><p class="muted">密码经加盐哈希保存。网页使用 HttpOnly 会话 Cookie，脚本无法读取该 Cookie；组长无法查看你的密码、任务和账本。</p><div class="row"><button id="export-account" class="secondary" type="button">导出我的数据</button><button id="logout" class="quiet" type="button">退出登录</button><a href="./privacy.html">数据与隐私说明 ↗</a></div></div>
       <div class="card"><div class="section-heading"><h3>个人资料</h3><button class="quiet" data-editor="profile">编辑</button></div><p id="personal-profile"></p></div>
       <div class="card"><h3>让旧记录一起同行</h3><p class="muted">支持 Aca V9–V12、QuantLife 进度 JSON、整合版备份。先预览再确认，导入不增加排行榜积分。导入前建议先导出当前数据。</p><label for="import-file">选择 JSON 存档（最大8 MB）</label><input id="import-file" type="file" accept=".json,application/json"><div id="import-preview" class="hidden"></div><div id="import-log"></div></div>
       <form id="password-form" class="card"><h3>修改密码</h3><label for="current-password">当前密码</label><input id="current-password" type="password" autocomplete="current-password" required maxlength="128"><label for="new-password">新密码（至少 12 位）</label><input id="new-password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required><button class="secondary" type="submit">修改并退出所有设备</button></form>

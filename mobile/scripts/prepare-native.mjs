@@ -13,6 +13,8 @@ const vector=`<vector xmlns:android="http://schemas.android.com/apk/res/android"
 if(platform==='android'){
   const java='android/app/src/main/java/cn/okekxf/growth';mkdirSync(join(root,java),{recursive:true});
   for(const name of ['MainActivity.java','NativeSessionPlugin.java'])copyFileSync(join(root,'native/android',name),join(root,java,name));
+  // Drop Capacitor's placeholder test, which asserts its template package name.
+  rmSync(join(root,'android/app/src/androidTest/java/com/getcapacitor/myapp'),{recursive:true,force:true});
   const testDir='android/app/src/androidTest/java/cn/okekxf/growth';mkdirSync(join(root,testDir),{recursive:true});copyFileSync(join(root,'native/android/NativeSmokeTest.java'),join(root,testDir,'NativeSmokeTest.java'));
   let gradle=read('android/app/build.gradle').replace(/versionCode \d+/,'versionCode 20001').replace(/versionName "[^"]+"/,'versionName "2.0.1"');
   if(!gradle.includes('applicationIdSuffix'))gradle=gradle.replace('buildTypes {','buildTypes {\n        debug { applicationIdSuffix ".dev"; versionNameSuffix "-test" }');
@@ -23,7 +25,7 @@ if(platform==='android'){
   write('android/app/src/main/res/xml/file_paths.xml','<paths xmlns:android="http://schemas.android.com/apk/res/android"><cache-path name="exports" path="exports/" /></paths>');
   write('android/app/src/main/res/values/styles.xml',`<resources>
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"><item name="colorPrimary">#DCE2F1</item><item name="colorPrimaryDark">#DCE2F1</item><item name="colorAccent">#425B99</item></style>
-    <style name="AppTheme.NoActionBar" parent="AppTheme"><item name="windowActionBar">false</item><item name="windowNoTitle">true</item><item name="android:windowLightStatusBar">true</item><item name="android:windowLightNavigationBar">true</item><item name="android:windowBackground">#DCE2F1</item></style>
+    <style name="AppTheme.NoActionBar" parent="AppTheme"><item name="windowActionBar">false</item><item name="windowNoTitle">true</item><item name="android:windowLightStatusBar">true</item><item name="android:windowBackground">#DCE2F1</item></style>
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen"><item name="windowSplashScreenBackground">#DCE2F1</item><item name="windowSplashScreenAnimatedIcon">@drawable/growth_icon</item><item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item></style>
   </resources>`);
   write('android/app/src/main/res/drawable/growth_icon.xml',vector);

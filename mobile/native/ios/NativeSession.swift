@@ -50,7 +50,6 @@ public class NativeSessionPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 }
 
-@objc(GrowthViewController)
 class GrowthViewController: CAPBridgeViewController {
     override func capacitorDidLoad() {
         bridge?.registerPluginInstance(NativeSessionPlugin())

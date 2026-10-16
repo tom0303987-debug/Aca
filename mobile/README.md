@@ -80,10 +80,12 @@ npm run native:android
 node scripts/backup.mjs
 ```
 
-在线备份会生成独立一致的SQLite文件到 `backups`。请另存安全位置。此版本没有自助密码找回、推送通知、多服务器横向扩展、已验证的原生长期登录或商店签名。
+在线备份会生成独立一致的SQLite文件到 `backups`。请另存安全位置。此版本没有自助密码找回、推送通知、多服务器横向扩展、永久登录或商店签名。
 
 服务默认本机运行，没有购买服务、发送邀请、上传用户私有存档或替用户注册付费账号。
 
 ## 来源
 
 QuantLife 格式与设计参考： https://github.com/tom0303987-debug/QuantLife_Web 。保留MIT版权声明，详见 `THIRD-PARTY-NOTICES.md`。
+
+手机 2.0.1 内测构建、安装方式和验证边界见 [MOBILE-TESTING.md](MOBILE-TESTING.md)。

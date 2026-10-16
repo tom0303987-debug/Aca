@@ -113,7 +113,7 @@
     const data=await api(registering?'/api/register':'/api/login','POST',{username:$('username').value,password:$('password').value,...(registering?{nickname:$('nickname').value,accepted:$('auth-consent').checked,registrationCode:$('registration-code').value}:{})});
     state.token=data.token;state.user=data.user;$('password').value='';
     try{await refresh();await window.MobileBridge.saveToken(state.token);}catch(error){await clearAccount();throw error;}
-    $('auth-view').classList.add('hidden');$('app-view').classList.remove('hidden');showPage('today');feedback(registering?'账号已创建，先完成今天的一小步。':'登录成功，欢迎回来。');
+    $('auth-view').classList.add('hidden');$('app-view').classList.remove('hidden');showPage('today');$('retry-connection').classList.add('hidden');feedback(registering?'账号已创建，先完成今天的一小步。':'登录成功，欢迎回来。');
   });});
   document.querySelectorAll('[data-page]').forEach(button=>button.addEventListener('click',()=>perform(()=>showPage(button.dataset.page))));
   $('refresh').addEventListener('click',()=>perform(async()=>{await refresh();feedback('已读取最新数据。');}));

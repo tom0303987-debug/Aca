@@ -41,7 +41,7 @@ public class NativeSessionPlugin: CAPPlugin, CAPBridgedPlugin {
             status = SecItemAdd(item as CFDictionary, nil)
         }
         if status == errSecSuccess { call.resolve() }
-        else { call.reject("无法保存安全会话。", "SESSION_WRITE_FAILED") }
+        else { call.reject("无法保存安全会话。", "SESSION_WRITE_FAILED_\(status)") }
     }
     @objc func clear(_ call: CAPPluginCall) {
         let status = SecItemDelete(query as CFDictionary)
@@ -71,7 +71,7 @@ class GrowthViewController: CAPBridgeViewController {
               .then(t=>{if(t!=='smoke-test-not-a-real-session')throw Error('read mismatch');return window.MobileBridge.clearToken();})
               .then(()=>window.MobileBridge.getToken())
               .then(t=>{if(t!=='')throw Error('clear mismatch');window.__nativeSmoke='pass';})
-              .catch(e=>window.__nativeSmoke='fail:'+e.message);
+              .catch(e=>window.__nativeSmoke='fail:'+e.message+':'+e.code);
           }
           return window.__nativeSmoke;
         })()

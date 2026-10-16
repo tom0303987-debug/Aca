@@ -61,6 +61,7 @@ jobs:
           disable-animations: true
           script: |
             bash mobile/android/gradlew -p mobile/android :app:connectedDebugAndroidTest --no-daemon
+            adb install -r mobile/android/app/build/outputs/apk/debug/app-debug.apk
             adb shell am start -n cn.okekxf.growth.dev/cn.okekxf.growth.MainActivity
             sleep 3
             adb exec-out screencap -p > mobile/test-results/android/startup.png
@@ -92,12 +93,12 @@ jobs:
         working-directory: mobile
         env:
           ACA_API_BASE: https://app.okekxf.cn
-      - name: Compile iOS simulator application without signing
+      - name: Compile iOS simulator application with ad-hoc signing
         working-directory: mobile
         run: |
           mkdir -p test-results/ios
           set -o pipefail
-          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ios/build CODE_SIGNING_ALLOWED=NO build 2>&1 | tee test-results/ios/build.log
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ios/build CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- build 2>&1 | tee test-results/ios/build.log
           ditto -c -k --sequesterRsrc --keepParent ios/build/Build/Products/Debug-iphonesimulator/App.app test-results/ios/Upup-ios-simulator.zip
       - name: Launch iOS simulator for startup screenshot
         working-directory: mobile
@@ -113,9 +114,9 @@ jobs:
             sleep 1
           done
           cp "$APP_DATA/Documents/native-smoke-result.txt" test-results/ios/native-smoke-result.txt
-          test "$(cat test-results/ios/native-smoke-result.txt)" = pass
-          sleep 2
+          cat test-results/ios/native-smoke-result.txt
           xcrun simctl io "$DEVICE_ID" screenshot test-results/ios/startup.png
+          test "$(cat test-results/ios/native-smoke-result.txt)" = pass
       - uses: actions/upload-artifact@v4
         if: always()
         with:

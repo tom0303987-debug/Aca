@@ -19,10 +19,10 @@
     const base=window.ACA_CONFIG?.apiBase||'';
     if(window.Capacitor?.isNativePlatform?.()&&!base)throw Error('原生开发包尚未配置后端，请先完成 HTTPS 服务部署。');
     const epoch=state.authEpoch;
-    let response;
-    try{response=await fetch(base+path,{method,headers:{Accept:'application/json',...(body!==undefined?{'Content-Type':'application/json'}:{}),...(state.token?{Authorization:'Bearer '+state.token}:{})},body:body!==undefined?JSON.stringify(body):undefined,cache:'no-store',credentials:window.MobileBridge.isNative?'omit':'include',signal:AbortSignal.timeout(path==='/api/assistant'?35000:15000)});}
-    catch{throw Error('暂时无法连接服务器。请检查网络；新部署的服务需完成域名、HTTPS 配置后才能登录。');}
-    let data;try{data=await response.json();}catch{throw Error('未连接到有效的开发接口，请检查启动地址。');}
+    let response;const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),path==='/api/assistant'?35000:15000);
+    try{response=await fetch(base+path,{method,headers:{Accept:'application/json',...(body!==undefined?{'Content-Type':'application/json'}:{}),...(state.token?{Authorization:'Bearer '+state.token}:{})},body:body!==undefined?JSON.stringify(body):undefined,cache:'no-store',credentials:window.MobileBridge.isNative?'omit':'include',signal:controller.signal});}
+    catch{clearTimeout(timeout);throw Error('暂时无法连接服务器。请检查网络；新部署的服务需完成域名、HTTPS 配置后才能登录。');}
+    let data;try{data=await response.json();}catch{throw Error('未连接到有效的开发接口，请检查启动地址。');}finally{clearTimeout(timeout);}
     if(epoch!==state.authEpoch)throw Error('账号已切换，请重新操作。');
     if(!response.ok){
       if(response.status===401&&['LOGIN_REQUIRED','SESSION_EXPIRED'].includes(data.error?.code))await clearAccount();
@@ -75,7 +75,7 @@
   }
   async function refresh(){const data=await api('/api/me');state.user=data.user;state.summary=data.summary;renderSummary();if(state.page==='board')await loadBoard();if(window.GrowthUI)await window.GrowthUI.refresh();}
   function showPage(page){
-    state.page=page;window.scrollTo({top:0,behavior:'instant'});document.querySelectorAll('[data-panel]').forEach(el=>el.classList.toggle('hidden',el.dataset.panel!==page));
+    state.page=page;window.scrollTo({top:0,behavior:'auto'});document.querySelectorAll('[data-panel]').forEach(el=>el.classList.toggle('hidden',el.dataset.panel!==page));
     document.querySelectorAll('[data-page]').forEach(el=>el.classList.toggle('selected',el.dataset.page===page));
     document.querySelectorAll('[data-page]').forEach(el=>el.classList.toggle('selected',el.dataset.page===page||(page==='board'&&el.dataset.page==='group')));if(page==='board')return loadBoard();
   }

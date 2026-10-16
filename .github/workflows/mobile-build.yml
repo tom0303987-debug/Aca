@@ -60,7 +60,7 @@ jobs:
           profile: pixel_6
           disable-animations: true
           script: |
-            bash mobile/android/gradlew -p mobile/android connectedDebugAndroidTest --no-daemon
+            bash mobile/android/gradlew -p mobile/android :app:connectedDebugAndroidTest --no-daemon
             adb shell am start -n cn.okekxf.growth.dev/cn.okekxf.growth.MainActivity
             sleep 3
             adb exec-out screencap -p > mobile/test-results/android/startup.png
@@ -106,8 +106,15 @@ jobs:
           xcrun simctl boot "$DEVICE_ID"
           xcrun simctl bootstatus "$DEVICE_ID" -b
           xcrun simctl install "$DEVICE_ID" ios/build/Build/Products/Debug-iphonesimulator/App.app
-          xcrun simctl launch "$DEVICE_ID" cn.okekxf.growth
-          sleep 8
+          xcrun simctl launch "$DEVICE_ID" cn.okekxf.growth --native-smoke
+          APP_DATA=$(xcrun simctl get_app_container "$DEVICE_ID" cn.okekxf.growth data)
+          for i in {1..30}; do
+            test -f "$APP_DATA/Documents/native-smoke-result.txt" && break
+            sleep 1
+          done
+          cp "$APP_DATA/Documents/native-smoke-result.txt" test-results/ios/native-smoke-result.txt
+          test "$(cat test-results/ios/native-smoke-result.txt)" = pass
+          sleep 2
           xcrun simctl io "$DEVICE_ID" screenshot test-results/ios/startup.png
       - uses: actions/upload-artifact@v4
         if: always()

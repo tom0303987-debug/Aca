@@ -51,6 +51,42 @@ public class NativeSessionPlugin: CAPPlugin, CAPBridgedPlugin {
 }
 
 class GrowthViewController: CAPBridgeViewController {
+    #if DEBUG
+    private var smokeStarted = false
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if !smokeStarted && ProcessInfo.processInfo.arguments.contains("--native-smoke") {
+            smokeStarted = true
+            runSmoke(attempt: 0)
+        }
+    }
+    private func runSmoke(attempt: Int) {
+        let script = """
+        (()=>{
+          if(!window.MobileBridge || !window.ClubUI)return 'waiting';
+          if(!window.__nativeSmoke){
+            window.__nativeSmoke='pending';
+            window.MobileBridge.saveToken('smoke-test-not-a-real-session')
+              .then(()=>window.MobileBridge.getToken())
+              .then(t=>{if(t!=='smoke-test-not-a-real-session')throw Error('read mismatch');return window.MobileBridge.clearToken();})
+              .then(()=>window.MobileBridge.getToken())
+              .then(t=>{if(t!=='')throw Error('clear mismatch');window.__nativeSmoke='pass';})
+              .catch(e=>window.__nativeSmoke='fail:'+e.message);
+          }
+          return window.__nativeSmoke;
+        })()
+        """
+        webView?.evaluateJavaScript(script) { [weak self] value, error in
+            let result = value as? String ?? "waiting"
+            if result == "pass" || result.hasPrefix("fail:") || attempt >= 150 {
+                let output = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("native-smoke-result.txt")
+                try? (result == "pass" ? "pass" : "fail: " + result).write(to: output, atomically: true, encoding: .utf8)
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { self?.runSmoke(attempt: attempt + 1) }
+            }
+        }
+    }
+    #endif
     override func capacitorDidLoad() {
         bridge?.registerPluginInstance(NativeSessionPlugin())
     }

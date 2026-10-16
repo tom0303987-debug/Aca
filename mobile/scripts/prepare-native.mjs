@@ -41,10 +41,12 @@ if(platform==='android'){
 }else{
   const delegate='ios/App/App/AppDelegate.swift',marker='// BEGIN GROWTH NATIVE';
   write(delegate,read(delegate).split(marker)[0].trimEnd()+'\n\n'+marker+'\n'+read('native/ios/NativeSession.swift'));
+  const scene='ios/App/App/SceneDelegate.swift';
+  write(scene,read(scene).replace('rootViewController = CAPBridgeViewController()','rootViewController = GrowthViewController()'));
   const storyboard='ios/App/App/Base.lproj/Main.storyboard';
   write(storyboard,read(storyboard).replace('customClass="CAPBridgeViewController" customModule="Capacitor"','customClass="GrowthViewController" customModule="App"'));
   const project='ios/App/App.xcodeproj/project.pbxproj';
-  write(project,read(project).replace(/MARKETING_VERSION = [^;]+;/g,'MARKETING_VERSION = 2.0.1;').replace(/CURRENT_PROJECT_VERSION = [^;]+;/g,'CURRENT_PROJECT_VERSION = 20001;'));
+  write(project,read(project).replace(/IPHONEOS_DEPLOYMENT_TARGET = [^;]+;/g,'IPHONEOS_DEPLOYMENT_TARGET = 15.4;').replace(/MARKETING_VERSION = [^;]+;/g,'MARKETING_VERSION = 2.0.1;').replace(/CURRENT_PROJECT_VERSION = [^;]+;/g,'CURRENT_PROJECT_VERSION = 20001;'));
   const info='ios/App/App/Info.plist';
   let plist=read(info);
   if(!plist.includes('<key>UIUserInterfaceStyle</key>'))plist=plist.replace('</dict>\n</plist>','<key>UIUserInterfaceStyle</key><string>Light</string>\n</dict>\n</plist>');

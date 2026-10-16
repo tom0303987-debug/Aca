@@ -89,3 +89,5 @@ node scripts/backup.mjs
 QuantLife 格式与设计参考： https://github.com/tom0303987-debug/QuantLife_Web 。保留MIT版权声明，详见 `THIRD-PARTY-NOTICES.md`。
 
 手机 2.0.1 内测构建、安装方式和验证边界见 [MOBILE-TESTING.md](MOBILE-TESTING.md)。
+
+手机构建结果与真机验证边界见 [MOBILE-TEST-REPORT.md](MOBILE-TEST-REPORT.md)。

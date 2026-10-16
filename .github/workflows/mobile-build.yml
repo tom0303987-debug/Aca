@@ -63,7 +63,7 @@ jobs:
             bash mobile/android/gradlew -p mobile/android :app:connectedDebugAndroidTest --no-daemon
             adb install -r mobile/android/app/build/outputs/apk/debug/app-debug.apk
             adb shell am start -n cn.okekxf.growth.dev/cn.okekxf.growth.MainActivity
-            sleep 3
+            sleep 12
             adb exec-out screencap -p > mobile/test-results/android/startup.png
       - uses: actions/upload-artifact@v4
         if: always()
